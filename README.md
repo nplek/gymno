@@ -1,1 +1,2 @@
-# gymno
+# Gymnocalycium
+Mini Gymno
