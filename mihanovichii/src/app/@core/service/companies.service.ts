@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { PagedData } from '../data/page-data';
 
 export class Company {
     comId: number;
@@ -31,11 +32,17 @@ export class CompanyService {
         private http: HttpClient,
     ){}
 
+    getCompaniesPage(): Observable<PagedData<Company>> {
+        return this.http.get<Company[]>(`${this.dataUrl}/`).pipe(
+            map((result:any)=>{
+               return result;
+            }));
+    }
+
     getCompaniesList(): Observable<Company[]> {
         return this.http.get<Company[]>(`${this.dataUrl}/list`).pipe(
             map((result:any)=>{
-                console.log(result);
-               return result;
+               return result.data;
             }));
     }
 

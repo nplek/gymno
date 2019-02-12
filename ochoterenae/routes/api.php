@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 
             Route::post('departments/{id}/restore','DepartmentController@restore')->name('departments.restore');
             Route::get('departments/list','DepartmentController@list')->name('departments.list');
+            Route::get('departments/active','DepartmentController@list')->name('departments.active');
             Route::resource('departments', 'DepartmentController',['except' => ['create','edit']]);
 
             Route::post('locations/{id}/restore','LocationController@restore')->name('locations.restore');
@@ -42,13 +43,14 @@ use Illuminate\Http\Request;
 
             Route::post('employees/manager/list','EmployeeController@listManager')->name('employees.manager.list');
             Route::post('employees/staff/list','EmployeeController@listStaff')->name('employees.staff.list');
-            Route::post('employees/list','EmployeeController@list')->name('employees.list');
+            Route::get('employees/list','EmployeeController@list')->name('employees.list');
+            Route::get('employees/active','EmployeeController@list')->name('employees.active');
             Route::resource('employees', 'EmployeeController',['except' => ['create','edit']]);
 
-            Route::post('roles/list','RoleController@list')->name('roles.list');
+            Route::get('roles/list','RoleController@list')->name('roles.list');
             Route::resource('roles', 'RoleController',['except' => ['create','edit']]);
             
-            Route::post('permissions/list','PermissionController@list')->name('permissions.list');
+            Route::get('permissions/list','PermissionController@list')->name('permissions.list');
             Route::resource('permissions', 'PermissionController',['except' => ['create','edit']]);
             
             Route::post('teams/list','TeamController@list')->name('teams.list');
@@ -62,7 +64,7 @@ use Illuminate\Http\Request;
             Route::delete('logs/{id}', 'LogController@destroyLog')->name('logs.delete');
 
             Route::post('positions/{id}/restore','PositionController@restore')->name('positions.restore');
-            Route::post('positions/list','PositionController@list')->name('positions.list');
+            Route::get('positions/list','PositionController@list')->name('positions.list');
             Route::resource('positions', 'PositionController',['except' => ['create','edit']]);
 
             Route::post('items/{id}/restore','ItemController@restore')->name('items.restore');

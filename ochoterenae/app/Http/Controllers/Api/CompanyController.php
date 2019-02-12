@@ -17,12 +17,13 @@ class CompanyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $pageSize = min($request['page_size'],50);
         //if (Auth::user()->can('restore-company') ){
             //return new CompanyCollection(Company::withTrashed()->paginate(50));
         //} else {
-            return new CompanyCollection(Company::paginate(50));
+            return new CompanyCollection(Company::paginate($pageSize));
         //}
     }
 

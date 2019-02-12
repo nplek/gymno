@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Employee;
 use App\Http\Resources\EmployeeCollection;
 use App\Http\Resources\Employee as EmployeeResource;
-//use App\Http\Resources\EmployeeList;
+use App\Http\Resources\EmployeeList;
 use Auth;
 
 class EmployeeController extends Controller
@@ -23,7 +23,7 @@ class EmployeeController extends Controller
 
     public function list()
     {
-        //return EmployeeList::collection(Employee::active()->get());
+        return EmployeeList::collection(Employee::active()->get());
     }
 
     public function listManager()

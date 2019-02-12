@@ -17,6 +17,7 @@ class CreateWarehousesTable extends Migration
             $table->increments('id');
             $table->string('whs_code',20);
             $table->string('whs_name',50);
+            $table->string('active',1)->default('A');
             $table->softDeletes();
             $table->timestamps();
         });

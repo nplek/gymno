@@ -65,6 +65,7 @@ class UnitController extends Controller
         $item = Unit::findOrFail($id);
         $item->delete();
         return new UnitResource($item);
+        //return response()->json(null, 204);
     }
 
     public function restore($id)

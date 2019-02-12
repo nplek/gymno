@@ -95,7 +95,7 @@ export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
       },
       {
         title: 'Item code',
-        link: '/pages/itemcodes/items-table',
+        link: '/pages/items/items-table',
       },
     ],
   },

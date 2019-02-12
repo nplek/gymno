@@ -52,6 +52,24 @@ const routes: Routes = [{
     path: 'departments',
     loadChildren: './departments/departments.module#DepartmentsModule'
   }, {
+    path: 'employees',
+    loadChildren: './employees/employees.module#EmployeesModule',
+  }, {
+    path: 'positions',
+    loadChildren: './positions/positions.module#PositionsModule',
+  }, {
+    path: 'locations',
+    loadChildren: './locations/locations.module#LocationsModule',
+  }, {
+    path: 'warehouses',
+    loadChildren: './warehouses/warehouses.module#WarehousesModule',
+  }, {
+    path: 'units',
+    loadChildren: './units/units.module#UnitsModule',
+  }, {
+    path: 'items',
+    loadChildren: './items/items.module#ItemsModule',
+  }, {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full',

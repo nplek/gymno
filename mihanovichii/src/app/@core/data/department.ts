@@ -3,9 +3,9 @@ import { Company } from './company';
 export class Department {
     depId: number;
     name: string;
-    shortName: string;
+    short_name: string;
     company: Company;
     active: string;
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
 }

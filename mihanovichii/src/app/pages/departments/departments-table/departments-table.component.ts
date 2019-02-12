@@ -19,7 +19,7 @@ export class DepartmentsTableComponent implements OnInit {
   departmentForm = this.fb.group({
     depId:[''],
     name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]],
-    shortName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
+    short_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
     company: ['', Validators.required],
     active: ['', Validators.required],
   });
@@ -78,14 +78,14 @@ export class DepartmentsTableComponent implements OnInit {
           }
         },
       },
-      /*created_at: {
+      created_at: {
         title: 'Create date',
-        type: 'date',
+        type: 'string',
         filter: false,
-        valuePrepareFunction: (value) => {
+        /*valuePrepareFunction: (value) => {
           return new DatePipe('en-US').transform(new Date(value), 'dd/MM/yyyy HH:mm:ss');
-        }
-      },*/
+        }*/
+      },
     },
   };
 
@@ -133,10 +133,10 @@ export class DepartmentsTableComponent implements OnInit {
       this.departmentForm = this.fb.group({
         depId: [this.department.depId],
         name: new FormControl(this.department.name, [Validators.required, Validators.minLength(4), Validators.maxLength(100)]),
-        shortName: new FormControl(this.department.shortName, [Validators.required, Validators.minLength(2), Validators.maxLength(10)]),
+        short_name: new FormControl(this.department.short_name, [Validators.required, Validators.minLength(2), Validators.maxLength(10)]),
         company: new FormControl(this.department.company, [Validators.required]),
         active: new FormControl(this.department.active, [Validators.required]),
-        createAt: [this.department.createdAt]
+        created_at: [this.department.created_at]
       });
       
     } else if (event.action == "delete" ) {
@@ -164,7 +164,7 @@ export class DepartmentsTableComponent implements OnInit {
     this.departmentForm = this.fb.group({
       depId: [''],
       name: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]),
-      shortName: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]),
+      short_name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]),
       company: new FormControl('',Validators.required),
       active: new FormControl('', Validators.required),
     });

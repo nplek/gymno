@@ -1,0 +1,28 @@
+@import '~@nebular/theme/styles/core/mixins';
+
+:host {
+  button {
+    @include nb-ltr(margin, 0 0.75rem 2rem 0);
+    @include nb-rtl(margin, 0 0 2rem 0.75rem);
+  }
+}
+
+:host /deep/ ng2-st-tbody-edit-delete {
+  display: flex !important;
+  height: 0 !important;
+}
+  
+:host /deep/ ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom {
+  display: inline-block;
+  width: 50px;
+  text-align: center;
+  font-size: 1.1em;
+}
+  
+:host /deep/ ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom:hover {
+  color: #5dcfe3;
+}
+
+button.with-margins {
+  margin: 0 0.5rem 0.5rem 0;
+}

@@ -11,12 +11,13 @@ use Auth;
 
 class DepartmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $pageSize = $request['page_size'];
         //if (Auth::user()->can('restore-department') ){
             //return new DepartmentCollection(Department::withTrashed()->paginate(50));
         //} else {
-            return new DepartmentCollection(Department::paginate(50));
+            return new DepartmentCollection(Department::paginate($pageSize));
         //}
     }
 

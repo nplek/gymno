@@ -1,0 +1,146 @@
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card [hidden]="editorEnabled">
+      <nb-card-header>
+        Employee Table&nbsp;
+            <button *nbIsGranted="['create', 'company']" type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
+            <button type="button" class="btn btn-primary with-margins" (click)="onClickRefresh()" title="Refresh"><i class="fa fa-sync"></i></button>
+      </nb-card-header>
+    
+      <nb-card-body>
+        <ng2-smart-table [settings]="settings" [source]="source" (custom)="onCustom($event)">
+        </ng2-smart-table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6">
+    <form (ngSubmit)="onSubmit()" [formGroup]="employeeForm">
+    <nb-card [hidden]="!editorEnabled">
+      <nb-card-header>{{ title }} Employee</nb-card-header>
+      <nb-card-body>
+        <div class="form-group">
+          <label>Employee ID</label>
+          <input type="hidden" class="form-control" formControlName="id"/>
+          <input type="text" placeholder="Employee ID" class="form-control" name="employee_id" formControlName="employee_id"/>
+          <div *ngIf="employeeForm.controls.employee_id.errors && employeeForm.controls.employee_id.dirty" >
+            <p *ngIf="employeeForm.controls.employee_id.errors.required">Field is required</p>
+            <p *ngIf="employeeForm.controls.employee_id.errors.minlength">Minimum {{ employeeForm.controls.employee_id.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="employeeForm.controls.employee_id.errors.maxlength">Maximum {{ employeeForm.controls.employee_id.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="First Name" class="form-control" name="first_name" formControlName="first_name"/>
+          <div *ngIf="employeeForm.controls.first_name.errors && employeeForm.controls.first_name.dirty" >
+            <p *ngIf="employeeForm.controls.first_name.errors.required">Field is required</p>
+            <p *ngIf="employeeForm.controls.first_name.errors.minlength">Minimum {{ employeeForm.controls.first_name.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="employeeForm.controls.first_name.errors.maxlength">Maximum {{ employeeForm.controls.first_name.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Last Name" class="form-control" name="lastName" formControlName="last_name"/>
+          <div *ngIf="employeeForm.controls.last_name.errors && employeeForm.controls.last_name.dirty">
+            <p *ngIf="employeeForm.controls.last_name.errors.required">Field is required</p>
+            <p *ngIf="employeeForm.controls.last_name.errors.minlength">Mininum {{employeeForm.controls.last_name.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="employeeForm.controls.last_name.errors.maxlength">Maximum {{ employeeForm.controls.last_name.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" placeholder="Email" class="form-control" name="email" formControlName="email"/>
+          <div *ngIf="employeeForm.controls.email.errors && employeeForm.controls.email.dirty">
+            <p *ngIf="employeeForm.controls.email.errors.required">Field is required</p>
+            <p *ngIf="employeeForm.controls.email.errors.email">Email is required </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mobile</label>
+          <input type="text" placeholder="Mobile" class="form-control" name="mobile" formControlName="mobile"/>
+          <div *ngIf="employeeForm.controls.mobile.errors && employeeForm.controls.mobile.dirty">
+            <p *ngIf="employeeForm.controls.mobile.errors.maxlength">Maximum {{ employeeForm.controls.mobile.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" placeholder="Phone" class="form-control" name="phone" formControlName="phone"/>
+          <div *ngIf="employeeForm.controls.phone.errors && employeeForm.controls.phone.dirty">
+            <p *ngIf="employeeForm.controls.phone.errors.maxlength">Maximum {{ employeeForm.controls.phone.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Position</label>
+          <select class="form-control" formControlName="position" [(ngModel)]="positionSelected">
+            <option class="form-control"  [ngValue]="c" *ngFor="let c of positions" [selected]="positionSelected.id == c.id" >{{ c.short_name }} -- {{c.name}}</option>
+          </select>
+          <div *ngIf="employeeForm.controls.position.errors && employeeForm.controls.position.dirty">
+            <p *ngIf="employeeForm.controls.position.errors.required">Field is required</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Department</label>
+          <select class="form-control" formControlName="department" [(ngModel)]="departmentSelected">
+            <option class="form-control"  [ngValue]="d" *ngFor="let d of departments" [selected]="departmentSelected.id == d.id" >{{ d.short_name }} -- {{d.name}}</option>
+          </select>
+          <div *ngIf="employeeForm.controls.department.errors && employeeForm.controls.department.dirty">
+            <p *ngIf="employeeForm.controls.department.errors.required">Field is required</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Employee type</label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="chief" value="C" name="employeeType" formControlName="employeeType">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Chief Of</span>
+          </label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="director" value="D" name="employeeType" formControlName="employeeType" >
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Director</span>
+          </label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="manager" value="M" name="employeeType" formControlName="employeeType" >
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Manager</span>
+          </label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="staff" value="S" name="employeeType" formControlName="employeeType" >
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Staff</span>
+          </label>
+          <div *ngIf="employeeForm.controls.employeeType.errors && employeeForm.controls.employeeType.dirty">
+            <p *ngIf="employeeForm.controls.employeeType.errors.required">Field is required</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="active" value="A" name="active" formControlName="active">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Active</span>
+          </label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="inactive" value="I" name="active" formControlName="active" >
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Inactive</span>
+          </label>
+          <div *ngIf="employeeForm.controls.active.errors && employeeForm.controls.active.dirty">
+            <p *ngIf="employeeForm.controls.active.errors.required">Field is required</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <p *ngIf="message" style="color: red;">{{ message }}</p>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button type="submit" class="btn btn-success with-margins" [disabled]="!employeeForm.valid" >{{title}}</button>
+        <button type="button" class="btn btn-outline-info with-margins" (click)="onClickBack()">Back</button>
+      </nb-card-footer>
+    </nb-card>
+    </form>
+  </div>
+
+</div>

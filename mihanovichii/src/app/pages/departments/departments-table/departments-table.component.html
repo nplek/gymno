@@ -33,17 +33,17 @@
           </div>
           <div class="form-group">
             <label>Short Name</label>
-            <input type="text" placeholder="Short Name" class="form-control" name="shortName" formControlName="shortName"/>
-            <div *ngIf="departmentForm.controls.shortName.errors && departmentForm.controls.shortName.dirty">
-              <p *ngIf="departmentForm.controls.shortName.errors.required">Field is required</p>
-              <p *ngIf="departmentForm.controls.shortName.errors.minlength">Mininum {{departmentForm.controls.shortName.errors.minlength.requiredLength }} characters </p>
-              <p *ngIf="departmentForm.controls.shortName.errors.maxlength">Maximum {{ departmentForm.controls.shortName.errors.maxlength.requiredLength }} characters </p>
+            <input type="text" placeholder="Short Name" class="form-control" name="short_name" formControlName="short_name"/>
+            <div *ngIf="departmentForm.controls.short_name.errors && departmentForm.controls.short_name.dirty">
+              <p *ngIf="departmentForm.controls.short_name.errors.required">Field is required</p>
+              <p *ngIf="departmentForm.controls.short_name.errors.minlength">Mininum {{departmentForm.controls.short_name.errors.minlength.requiredLength }} characters </p>
+              <p *ngIf="departmentForm.controls.short_name.errors.maxlength">Maximum {{ departmentForm.controls.short_name.errors.maxlength.requiredLength }} characters </p>
             </div>
           </div>
           <div class="form-group">
             <label>Company</label>
             <select class="form-control" formControlName="company" [(ngModel)]="companySelected">
-              <option class="form-control"  [ngValue]="c" *ngFor="let c of companies" [selected]="companySelected.comId == c.comId" >{{ c.shortName }} -- {{c.name}}</option>
+              <option class="form-control"  [ngValue]="c" *ngFor="let c of companies" [selected]="companySelected.id == c.id" >{{ c.short_name }} -- {{c.name}}</option>
             </select>
             <div *ngIf="departmentForm.controls.company.errors && departmentForm.controls.active.dirty">
               <p *ngIf="departmentForm.controls.company.errors.required">Field is required</p>

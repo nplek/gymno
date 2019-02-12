@@ -19,6 +19,7 @@ class CreateItemsTable extends Migration
             $table->string('name',100);
             $table->string('description',200)->nullable();
             $table->string('unit_name',10)->default('pcs');
+            $table->string('active',1)->default('A');
             $table->softDeletes();
             $table->timestamps();
         });

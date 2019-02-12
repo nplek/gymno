@@ -27,7 +27,7 @@ class Employee extends JsonResource
             'photo' => $this->photo,
             'positions' => PositionResource::collection($this->positions),
             'manager_id' => $this->manager_id,
-            //'manager' => new EmployeeList($this->manager),
+            'manager' => new EmployeeList($this->manager),
             'type' => $this->type,
             'active' => $this->active,
             'department_id' => $this->department_id,

@@ -17,6 +17,7 @@ class CreateUnitsTable extends Migration
             $table->increments('id');
             $table->string('name',10);
             $table->string('tname',10)->nullable();
+            $table->string('active',1)->default('A');
             $table->softDeletes();
             $table->timestamps();
         });

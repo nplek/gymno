@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card [hidden]="editorEnabled">
+      <nb-card-header>
+        Warehouse Table 
+        <button *nbIsGranted="['create', 'warehouse']" type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-primary with-margins" (click)="onClickRefresh()" title="Refresh"><i class="fa fa-sync"></i></button>
+      </nb-card-header>
+    
+      <nb-card-body>
+        <ng2-smart-table [settings]="settings" [source]="source" (custom)="onCustom($event)">
+        </ng2-smart-table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6">
+    <form (ngSubmit)="onSubmit()" [formGroup]="warehouseForm">
+    <nb-card [hidden]="!editorEnabled">
+      <nb-card-header>{{ title }} Warehouse</nb-card-header>
+      <nb-card-body>
+        <div class="form-group">
+          <label>Warehouse Code</label>
+          <input type="hidden" class="form-control" formControlName="id"/>
+          <input type="text" placeholder="Warehouse Code" class="form-control" name="whs_code" formControlName="whs_code"/>
+          <div *ngIf="warehouseForm.controls.whs_code.errors && warehouseForm.controls.whs_code.dirty" >
+            <p *ngIf="warehouseForm.controls.whs_code.errors.required">Field is required</p>
+            <p *ngIf="warehouseForm.controls.whs_code.errors.minlength">Minimum {{ warehouseForm.controls.whs_code.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="warehouseForm.controls.whs_code.errors.maxlength">Maximum {{ warehouseForm.controls.whs_code.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" placeholder="Name" class="form-control" name="whs_name" formControlName="whs_name"/>
+          <div *ngIf="warehouseForm.controls.whs_name.errors && warehouseForm.controls.whs_name.dirty" >
+            <p *ngIf="warehouseForm.controls.whs_name.errors.required">Field is required</p>
+            <p *ngIf="warehouseForm.controls.whs_name.errors.minlength">Minimum {{ warehouseForm.controls.whs_name.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="warehouseForm.controls.whs_name.errors.maxlength">Maximum {{ warehouseForm.controls.whs_name.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="active" value="A" name="active" formControlName="active">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Active</span>
+          </label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="inactive" value="I" name="active" formControlName="active" >
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Inactive</span>
+          </label>
+          <div *ngIf="warehouseForm.controls.active.errors && warehouseForm.controls.active.dirty">
+            <p *ngIf="warehouseForm.controls.active.errors.required">Field is required</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <p *ngIf="message" style="color: red;">{{ message }}</p>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button type="submit" class="btn btn-success with-margins" [disabled]="!warehouseForm.valid" >{{title}}</button>
+        <button type="button" class="btn btn-outline-info with-margins" (click)="onClickBack()">Back</button>
+      </nb-card-footer>
+    </nb-card>
+    </form>
+  </div>
+</div>
+  
