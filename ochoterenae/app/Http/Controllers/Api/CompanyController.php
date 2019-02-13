@@ -19,18 +19,33 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
+        $query = [];
+        if ($request['active_like']){
+            $search = $request['active_like'];
+            array_push($query,['active','=',$search]);
+        }
+
+        if ($request['short_name_like']) {
+            $search = $request['short_name_like'];
+            array_push($query,['short_name', 'like', '%'.$search.'%']);
+        }
+
+        if ($request['name_like']) {
+            $search = $request['name_like'];
+            array_push($query,['name', 'like', '%'.$search.'%']);
+        }
+
         $pageSize = min($request['page_size'],50);
         //if (Auth::user()->can('restore-company') ){
-            //return new CompanyCollection(Company::withTrashed()->paginate(50));
+            return new CompanyCollection(Company::where($query)->withTrashed()->paginate($pageSize));
         //} else {
-            return new CompanyCollection(Company::paginate($pageSize));
+            //return new CompanyCollection(Company::where($query)->paginate($pageSize));
         //}
     }
 
     public function list()
     {
         return CompanyResource::collection(Company::active()->get());
-        //return new CompanyCollection(Company::paginate(50));
     }
 
     /**

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ServerDataSource, LocalDataSource } from 'ng2-smart-table';
-import { Company, CompanyService } from '../../../@core/service/companies.service';
+import { Company } from '../../../@core/data/company';
+import { CompanyService, CompanyDataSource } from '../../../@core/service/companies.service';
 import { FormBuilder,FormControl,Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-companies-table',
@@ -13,9 +14,9 @@ export class CompaniesTableComponent implements OnInit {
   message: any;
 
   companyForm = this.fb.group({
-    comId:[''],
+    id:[''],
     name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
-    shortName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
+    short_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
     active: ['', Validators.required],
   });
 
@@ -26,6 +27,10 @@ export class CompaniesTableComponent implements OnInit {
 
   settings = {
     mode: 'external',
+    pager: {
+      display: true,
+      perPage: 10,
+    },
     actions: {
       add: false,
       edit: false,
@@ -53,47 +58,51 @@ export class CompaniesTableComponent implements OnInit {
         type: 'html',
         valuePrepareFunction: (data) => {
           if (data == 'A') {
-            //return 'Active';
             return '<i class="fa fa-eye" title="Active"></i>'
           } else {
-            //return 'Inactive';
             return '<i class="fa fa-eye-slash" title="Inactive"></i>'
           }
         },
       },
       created_at: {
-        title: 'Create date',
-        type: 'string',
+        title: 'Created',
+        type: 'date',
         filter: false,
-        /*valuePrepareFunction: (value) => {
-          return new DatePipe('en-US').transform(new Date(value), 'dd/MM/yyyy HH:mm:ss');
-        }*/
+        valuePrepareFunction: (value) => {
+          return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+        }
       },
+      deleted_at: {
+        title: 'Deleted',
+        type: 'date',
+        filter: false,
+        valuePrepareFunction: (value) => {
+          if (value) {
+            return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+          } else {
+            return '';
+          }
+          
+        }
+      }
     },
   };
 
-  source: LocalDataSource = new LocalDataSource();
+  source: CompanyDataSource;
 
   constructor(
+    private http: HttpClient,
     private companyService: CompanyService,
     private fb: FormBuilder) {
+      this.source = new CompanyDataSource(http);
+      this.source.setPaging(1,this.settings.pager.perPage,true);
   }
-
+  
   ngOnInit(): void {
-    this.getCompany();
   }
 
   newCompany() {
     this.editorEnabled = false;
-  }
-
-  getCompany() {
-    return this.companyService.getCompanies()
-              .subscribe(
-                companies => {
-                  this.source.load(companies);
-                }
-              );
   }
 
   onCustom(event): void {
@@ -107,24 +116,25 @@ export class CompaniesTableComponent implements OnInit {
       this.status = "update";
       this.company = event.data;
       this.companyForm = this.fb.group({
-        comId: [this.company.comId],
+        id: [this.company.id],
         name: new FormControl(this.company.name, [Validators.required, Validators.minLength(4), Validators.maxLength(50)]),
-        shortName: new FormControl(this.company.shortName, [Validators.required, Validators.minLength(2), Validators.maxLength(10)]),
+        short_name: new FormControl(this.company.short_name, [Validators.required, Validators.minLength(2), Validators.maxLength(10)]),
         active: new FormControl(this.company.active, Validators.required),
-        createAt: [this.company.createdAt]
+        created_at: [this.company.created_at]
       });
     } else if (event.action == "delete" ) {
       if (window.confirm('Are you sure you want to delete?')) {
-        //console.log("Delete record ");
         const index = event.source.data.indexOf(event.data);
         this.company = event.data;
-        /*this.companyService.delete(this.company)
+        this.companyService.deleteCompany(this.company)
         .subscribe(
           data => {
-            this.getCompany();
+            this.source.remove(this.company);
           }, 
-          error => console.log(error));*/
+          error => console.log(error));
       }
+    } else {
+      console.log(event.action);
     }
   }
 
@@ -135,9 +145,9 @@ export class CompaniesTableComponent implements OnInit {
     this.status = "create";
     this.company = new Company();
     this.companyForm = this.fb.group({
-      comId: [''],
+      id: [''],
       name: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]),
-      shortName: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]),
+      short_name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]),
       active: new FormControl('', Validators.required),
     });
   }
@@ -149,17 +159,17 @@ export class CompaniesTableComponent implements OnInit {
   }
 
   onClickRefresh(): void {
-    this.getCompany();
+    this.source.refresh();
   }
 
   save() {
     if (this.status == "create" ) {
       this.company = <Company>this.companyForm.value;
-      /*this.companyService.add(this.company)
+      this.companyService.addCompany(this.company)
         .subscribe(
           data => {
             this.editorEnabled = false;
-            this.getCompany();
+            this.source.add(this.company);
             this.company = new Company();
           }, 
           error => {
@@ -169,22 +179,20 @@ export class CompaniesTableComponent implements OnInit {
               this.message = error.message;
             }
             this.editorEnabled = true;
-          });*/
-      
-      //-->update to tables
+          });
     } else if (this.status == "update") {
       this.company = <Company>this.companyForm.value;
-      /*this.companyService.update(this.company)
+      this.companyService.updateCompany(this.company)
         .subscribe(
           data => {
             this.editorEnabled = false;
             this.company = new Company();
-            this.getCompany();
+            this.source.refresh();
           }, 
           error => { 
             this.editorEnabled = true;
             this.message = error.message;
-          });*/
+          });
     }
   }
 

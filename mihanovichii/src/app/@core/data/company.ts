@@ -1,8 +1,8 @@
 export class Company {
-    comId: number;
+    id: number;
     name: string;
-    shortName: string;
+    short_name: string;
     active: string;
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
 }
