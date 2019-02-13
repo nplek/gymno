@@ -9,13 +9,24 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laratrust\Traits\LaratrustUserTrait;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
+    use LogsActivity;
     use Notifiable;
     use SoftDeletes;
 
+    protected static $logName = 'system';
+    protected static $logOnlyDirty = true;
+
+    protected static $logAttributes = [
+        'name', 
+        'email',
+        'active',
+        'password',
+    ];
     protected $dates = ['deleted_at'];
 
     /**
@@ -48,5 +59,20 @@ class User extends Authenticatable
     public function setPasswordAttribute($password)
     {   
         $this->attributes['password'] = Hash::make($password);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', 'A');
+    }
+
+    public function roleusers()
+    {
+        return $this->hasmany(RoleUser::class);
+    }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class,'id','employee_id');
     }
 }

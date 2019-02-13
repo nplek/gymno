@@ -8,8 +8,20 @@ return [
             'profile' => 'r,u'
         ],
         'admin' => [
-            'users' => 'c,r,u,d',
-            'profile' => 'r,u'
+            'profile' => 'r,u',
+            'user' => 'c,r,u,v',
+            'role' => 'c,r,u,v',
+            'permission' => 'c,r,u,v',
+            'team' => 'c,r,u,v',
+            'activitylog' => 'r,d,v',
+            'accesslog' => 'r,d,v',
+            'securitylog' => 'r,d,v',
+            'organization' => 'v',
+            'company' => 'c,r,u,v',
+            'department' => 'c,r,u,v',
+            'location' => 'c,r,u,v',
+            'employee' => 'c,r,u,v',
+            'position' => 'c,r,u,v',
         ],
         'user' => [
             'profile' => 'r,u'
