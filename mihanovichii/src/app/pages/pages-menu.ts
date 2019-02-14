@@ -10,12 +10,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'nb-locked',
     children: [
       {
-        title: 'Login',
-        link: '/auth/login',
-      },
-      {
         title: 'Reset Password',
         link: '/auth/reset-password',
+      },
+      {
+        title: 'Logout',
+        url: '/logout'
       },
     ],
   },
