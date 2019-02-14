@@ -5,4 +5,4 @@ Test Web UI
 ng serve
 
 ## Build
-ng build --base-href http://localhost:8000/app
+ng build --base-href /app/

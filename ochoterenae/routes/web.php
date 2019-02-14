@@ -17,6 +17,7 @@ Route::get('welcome', function () {
 
 Route:: get('/', function() {
     return redirect('/login');
+    //return redirect('/app/#/');
 })->name('index');
 
 Auth::routes();
