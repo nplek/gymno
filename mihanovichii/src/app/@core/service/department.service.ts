@@ -9,6 +9,7 @@ const httpOptions = {
   headers: new HttpHeaders({ 
       'Content-Type': 'application/json',
       'accept': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('gymno_token')
   })
 };
 
@@ -25,7 +26,7 @@ export class DepartmentService {
     ){}
 
     getDepartments (): Observable<Department[]> {
-        return this.http.get<Department[]>(`${this.dataUrl}/`).pipe(
+        return this.http.get<Department[]>(`${this.dataUrl}/`,httpOptions).pipe(
             map((result:any)=>{
                 return result.data;
             }));

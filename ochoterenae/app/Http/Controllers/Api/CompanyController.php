@@ -36,6 +36,7 @@ class CompanyController extends Controller
         }
 
         $pageSize = min($request['page_size'],50);
+        //if ($request->user()->tokenCan('place-orders')) {
         //if (Auth::user()->can('restore-company') ){
             return new CompanyCollection(Company::where($query)->withTrashed()->paginate($pageSize));
         //} else {

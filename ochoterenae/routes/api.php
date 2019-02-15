@@ -12,13 +12,17 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-//Route::group(['middleware' => 'auth:api'], function(){
+Route::post('auth/login', 'Api\LoginController@login')->name('api.login');
+Route::get('auth/logout', 'Api\LoginController@logout')->name('api.logout');
+
+Route::group(['middleware' => 'auth:api'], function(){
     Route::namespace('Api')->group(function(){
         Route::name('api.')->group(function(){
             ///api/auth/login
-            Route::post('auth/login','LoginController@login')->name('auth.login');
-            Route::post('auth/sign-out','LoginController@signout')->name('auth.signout');
-            Route::post('auth/reset-pass','LoginController@resetpass')->name('auth.resetpass');
+            //Route::post('auth/login','LoginController@login')->name('auth.login');
+            //Route::post('auth/sign-out','LoginController@signout')->name('auth.signout');
+            //Route::post('auth/reset-pass','LoginController@resetpass')->name('auth.resetpass');
+            //Route::get('auth/logout','LoginController@logout')->name('auth.logout');
 
             Route::post('companies/{id}/restore','CompanyController@restore')->name('companies.restore');
             Route::get('companies/list','CompanyController@list')->name('companies.list');
@@ -80,4 +84,4 @@ use Illuminate\Http\Request;
             Route::resource('whs', 'WarehouseController',['except' => ['create','edit']]);
         });
     });
-//});
+});

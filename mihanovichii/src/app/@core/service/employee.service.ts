@@ -9,6 +9,7 @@ const httpOptions = {
   headers: new HttpHeaders({ 
       'Content-Type': 'application/json',
       'accept': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('gymno_token')
   })
 };
 
@@ -26,9 +27,8 @@ export class EmployeeService {
     ){}
 
     getEmployees (): Observable<Employee[]> {
-        return this.http.get<Employee[]>(`${this.employeeUrl}/`).pipe(
+        return this.http.get<Employee[]>(`${this.employeeUrl}/`,httpOptions).pipe(
             map((result:any)=>{
-                //return result._embedded.employees;
                 return result.data;
             }));
     }

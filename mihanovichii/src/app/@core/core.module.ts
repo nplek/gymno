@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbAuthModule, NbDummyAuthStrategy } from '@nebular/auth';
+import { NbAuthModule, NbDummyAuthStrategy, NbPasswordAuthStrategy } from '@nebular/auth';
 import { NbSecurityModule, NbRoleProvider } from '@nebular/security';
 import { of as observableOf, from } from 'rxjs';
 
@@ -31,25 +31,6 @@ const socialLinks = [
 
 const DATA_SERVICES = [
   { provide: UserData, useClass: UserService },
-  /*{ provide: ElectricityData, useClass: ElectricityService },
-  { provide: SmartTableData, useClass: SmartTableService },
-  { provide: UserActivityData, useClass: UserActivityService },
-  { provide: OrdersChartData, useClass: OrdersChartService },
-  { provide: ProfitChartData, useClass: ProfitChartService },
-  { provide: TrafficListData, useClass: TrafficListService },
-  { provide: EarningData, useClass: EarningService },
-  { provide: OrdersProfitChartData, useClass: OrdersProfitChartService },
-  { provide: TrafficBarData, useClass: TrafficBarService },
-  { provide: ProfitBarAnimationChartData, useClass: ProfitBarAnimationChartService },
-  { provide: TemperatureHumidityData, useClass: TemperatureHumidityService },
-  { provide: SolarData, useClass: SolarService },
-  { provide: TrafficChartData, useClass: TrafficChartService },
-  { provide: StatsBarData, useClass: StatsBarService },
-  { provide: CountryOrderData, useClass: CountryOrderService },
-  { provide: StatsProgressBarData, useClass: StatsProgressBarService },
-  { provide: VisitorsAnalyticsData, useClass: VisitorsAnalyticsService },
-  { provide: SecurityCamerasData, useClass: SecurityCamerasService },*/
-  
 ];
 
 export class NbSimpleRoleProvider extends NbRoleProvider {
@@ -65,18 +46,34 @@ export const NB_CORE_PROVIDERS = [
   ...NbAuthModule.forRoot({
 
     strategies: [
-      NbDummyAuthStrategy.setup({
+      /*NbDummyAuthStrategy.setup({
         name: 'email',
         delay: 3000,
+      }),*/
+      NbPasswordAuthStrategy.setup({
+        name: 'email',
+        baseEndpoint: '',
+        login: {
+          endpoint: 'http://localhost:8000/api/auth/login',
+          method: 'post',
+        },
+        logout: {
+          endpoint: 'http://localhost:8000/api/auth/logout',
+          method: 'get'
+        }
       }),
     ],
     forms: {
       login: {
         socialLinks: socialLinks,
+        redirectDelay: 0,
+        showMessages: {
+          success: true,
+        },
       },
-      register: {
+      /*register: {
         socialLinks: socialLinks,
-      },
+      },*/
     },
   }).providers,
 

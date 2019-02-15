@@ -3,14 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-//import { PagedData } from '../data/page-data';
 import { Company } from '../data/company';
 import { LocalDataSource, ServerDataSource } from 'ng2-smart-table';
 
 const httpOptions = {
     headers: new HttpHeaders({ 
         'Content-Type': 'application/json',
-        'accept': 'application/json'
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('gymno_token')
     })
 };
 
@@ -25,14 +25,14 @@ export class CompanyService {
     }
 
     getCompaniesList(): Observable<Company[]> {
-        return this.http.get<Company[]>(`${this.dataUrl}/list`).pipe(
+        return this.http.get<Company[]>(`${this.dataUrl}/list`,httpOptions).pipe(
             map((result:any)=>{
                return result.data;
             }));
     }
 
     getCompanies (): Observable<Company[]> {
-        return this.http.get<Company[]>(`${this.dataUrl}/`).pipe(
+        return this.http.get<Company[]>(`${this.dataUrl}/`,httpOptions).pipe(
             map((result:any)=>{
                return result.data;
             }));
@@ -94,7 +94,7 @@ export class CompanyDataSource extends LocalDataSource  {
                 }
             });
         }
-        return this.http.get<Company[]>(url)
+        return this.http.get<Company[]>(url,httpOptions)
         .pipe(
             map((res:any)=> {
                 this.lastRequestCount = res.meta.total;

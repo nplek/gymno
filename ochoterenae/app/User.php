@@ -10,9 +10,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laratrust\Traits\LaratrustUserTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Laravel\Passport\HasApiTokens;
+use Auth;
 
 class User extends Authenticatable
 {
+    use HasApiTokens;
     use LaratrustUserTrait;
     use LogsActivity;
     use Notifiable;
@@ -74,5 +77,10 @@ class User extends Authenticatable
     public function employee()
     {
         return $this->hasOne(Employee::class,'id','employee_id');
+    }
+
+    public function findForPassport($email)
+    {
+        return $this->where('email', $email)->first();
     }
 }

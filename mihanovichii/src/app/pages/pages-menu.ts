@@ -14,6 +14,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
         link: '/auth/reset-password',
       },
       {
+        title: 'Login',
+        link: '/auth/login'
+      },
+      {
         title: 'Logout',
         url: '/logout'
       },

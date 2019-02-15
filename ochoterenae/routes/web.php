@@ -17,19 +17,9 @@ Route::get('welcome', function () {
 
 Route:: get('/', function() {
     return redirect('/login');
-    //return redirect('/app/#/');
 })->name('index');
 
-Auth::routes();
-
-/*Route::get('/auth', function() {
-    if(!Auth::check())
-    {
-        $user = App\User::find(1);
-        Auth::login($user);
-    }
-    return Auth::user();
-});*/
+//Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
