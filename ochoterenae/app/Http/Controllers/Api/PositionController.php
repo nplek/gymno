@@ -11,12 +11,30 @@ use Auth;
 
 class PositionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = [];
+        if ($request['active_like']){
+            $search = $request['active_like'];
+            array_push($query,['active','=',$search]);
+        }
+
+        if ($request['short_name_like']) {
+            $search = $request['short_name_like'];
+            array_push($query,['short_name', 'like', '%'.$search.'%']);
+        }
+
+        if ($request['name_like']) {
+            $search = $request['name_like'];
+            array_push($query,['name', 'like', '%'.$search.'%']);
+        }
+
+        $pageSize = min($request['page_size'],50);
         //if (Auth::user()->can('restore-position') ){
             //return new PositionCollection(Position::withTrashed()->paginate(50));
+            return new PositionCollection(Position::where($query)->withTrashed()->paginate($pageSize));
         //} else {
-            return new PositionCollection(Position::paginate(50));
+            //return new PositionCollection(Position::paginate(50));
         //}
     }
 
@@ -29,7 +47,7 @@ class PositionController extends Controller
     {
         $this->validate($request, [
             'name'=>'required|min:3|max:120',
-            'short_name'=>'required|max:10|min:3|unique:positions',
+            'short_name'=>'required|max:10|min:2|unique:positions',
         ]);
 
         $position = Position::create([
@@ -51,12 +69,12 @@ class PositionController extends Controller
     {
         $this->validate($request, [
             'name'=>'required|min:3|max:100',
-            'short_name'=>'required|max:10|min:3',
+            'short_name'=>'required|max:10|min:2',
         ]);
         $position = Position::findOrFail($id);
         $position->name = $request['name'];
         $position->short_name = $request['short_name'];
-        $position->parent_id = $request['parent_id'];
+        //$position->parent_id = $request['parent_id'];
         $position->active = $request['active'];
         $position->save();
 

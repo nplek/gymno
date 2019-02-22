@@ -20,6 +20,7 @@ class CreateEmployeesTable extends Migration
             $table->string('last_name',100)->nullable();
             $table->string('mobile',30)->nullable();
             $table->string('phone',30)->nullable();
+            $table->string('email',100)->nullable();
             $table->string('photo')->nullable();
             $table->unsignedInteger('department_id')->nullable();
             $table->foreign('department_id')

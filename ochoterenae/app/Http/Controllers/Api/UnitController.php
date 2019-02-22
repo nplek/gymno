@@ -11,12 +11,30 @@ use Auth;
 
 class UnitController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = [];
+        if ($request['active_like']){
+            $search = $request['active_like'];
+            array_push($query,['active','=',$search]);
+        }
+
+        if ($request['short_name_like']) {
+            $search = $request['short_name_like'];
+            array_push($query,['short_name', 'like', '%'.$search.'%']);
+        }
+
+        if ($request['name_like']) {
+            $search = $request['name_like'];
+            array_push($query,['name', 'like', '%'.$search.'%']);
+        }
+
+        $pageSize = min($request['page_size'],50);
         //if (Auth::user()->can('restore-item') ){
             //return new ItemUnitCollection(Unit::withTrashed()->paginate(50));
+            return new UnitCollection(Unit::where($query)->withTrashed()->paginate($pageSize));
         //} else {
-            return new UnitCollection(Unit::paginate(50));
+            //return new UnitCollection(Unit::paginate(50));
         //}
     }
 
@@ -38,6 +56,8 @@ class UnitController extends Controller
         ]);*/
         $item = new Unit();
         $item->name = $request['name'];
+        $item->tname = $request['tname'];
+        $item->active = $request['active'];
         $item->save();
 
         return response()->json(['message' => 'store unit success.']);
@@ -55,6 +75,8 @@ class UnitController extends Controller
         ]);
         $item = Unit::findOrFail($id);
         $item->name = $request['name'];
+        $item->tname = $request['tname'];
+        $item->active = $request['active'];
         $item->save();
 
         return new UnitResource($item);

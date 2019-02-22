@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { LocalDataSource } from 'ng2-smart-table';
 import { DatePipe } from '@angular/common';
 import { FormBuilder,FormControl,Validators } from '@angular/forms';
 
 import { Warehouse } from '../../../@core/data/warehouse';
-import { WarehouseService } from '../../../@core/service/warehouse.service';
+import { WarehouseService, WarehouseDataSource } from '../../../@core/service/warehouse.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-warehouses-table',
@@ -26,11 +26,14 @@ export class WarehousesTableComponent implements OnInit {
   status = "view";
 
   ngOnInit() {
-    this.getData();
   }
 
   settings = {
     mode: 'external',
+    pager: {
+      display: true,
+      perPage: 10,
+    },
     actions: {
       add: false,
       edit: false,
@@ -60,33 +63,46 @@ export class WarehousesTableComponent implements OnInit {
           if (data == 'A') {
             return '<i class="fa fa-eye" title="Active"></i>'
           } else {
-            return '<i class="fa fa-eye-slash" title="Inactive" ></i>'
+            return '<i class="fa fa-eye-slash text-danger" title="Inactive" ></i>'
           }
         },
       },
-      /*createdAt: {
-        title: 'Create Date',
-        type: 'datetime',
+      created_at: {
+        title: 'Created',
+        type: 'date',
+        filter: false,
         valuePrepareFunction: (value) => {
-          return new DatePipe('en-US').transform(new Date(value), 'dd MMM yyyy HH:mm:ss');
+          if (value) {
+            return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+          } else {
+            return '';
+          }
+          
         }
-      }*/
+      },
+      deleted_at: {
+        title: 'Deleted',
+        type: 'date',
+        filter: false,
+        valuePrepareFunction: (value) => {
+          if (value) {
+            return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+          } else {
+            return '';
+          }
+          
+        }
+      }
     },
   };
 
-  source: LocalDataSource = new LocalDataSource();
+  source: WarehouseDataSource;
 
   constructor(private service: WarehouseService,
+    private http: HttpClient,
     private fb :FormBuilder) {
-  }
-
-  getData() {
-    return this.service.getWarehouses()
-            .subscribe(
-              warehouses => {
-                this.source.load(warehouses);
-              }
-            );
+      this.source = new WarehouseDataSource(http);
+      this.source.setPaging(1,this.settings.pager.perPage,true);
   }
 
   onCustom(event): void {
@@ -112,7 +128,7 @@ export class WarehousesTableComponent implements OnInit {
         this.service.deleteWarehouse(this.warehouse)
         .subscribe(
           data => {
-            this.getData();
+            this.source.remove(this.warehouse);
           }, 
           error => {
             this.message = error.message;
@@ -142,7 +158,7 @@ export class WarehousesTableComponent implements OnInit {
           data => {
             this.editorEnabled = false;
             this.warehouse = new Warehouse();
-            this.getData();
+            this.source.refresh();
           }, 
           error => {
             if (error.status == 409){
@@ -161,7 +177,7 @@ export class WarehousesTableComponent implements OnInit {
           data => {
             this.editorEnabled = false;
             this.warehouse = new Warehouse();
-            this.getData();
+            this.source.refresh();
           }, 
           error => { 
             this.editorEnabled = true;
@@ -184,7 +200,7 @@ export class WarehousesTableComponent implements OnInit {
   }
 
   onClickRefresh(): void {
-    this.getData();
+    this.source.refresh();
   }
 
 }

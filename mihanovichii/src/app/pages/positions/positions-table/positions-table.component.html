@@ -3,7 +3,7 @@
       <nb-card [hidden]="editorEnabled">
         <nb-card-header>
           Positions Table &nbsp;
-        <button *nbIsGranted="['create', 'company']" type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
         <button type="button" class="btn btn-primary with-margins" (click)="onClickRefresh()" title="Refresh"><i class="fa fa-sync"></i></button>
         </nb-card-header>
 
@@ -23,7 +23,7 @@
       <nb-card-body>
         <div class="form-group">
           <label>Name</label>
-          <input type="hidden" class="form-control" formControlName="posId"/>
+          <input type="hidden" class="form-control" formControlName="id"/>
           <input type="text" placeholder="Name" class="form-control" name="name" formControlName="name"/>
           <div *ngIf="positionForm.controls.name.errors && positionForm.controls.name.dirty" >
             <p *ngIf="positionForm.controls.name.errors.required">Field is required</p>
@@ -33,11 +33,11 @@
         </div>
         <div class="form-group">
           <label>Short Name</label>
-          <input type="text" placeholder="Short Name" class="form-control" name="shortName" formControlName="shortName"/>
-          <div *ngIf="positionForm.controls.shortName.errors && positionForm.controls.shortName.dirty">
-            <p *ngIf="positionForm.controls.shortName.errors.required">Field is required</p>
-            <p *ngIf="positionForm.controls.shortName.errors.minlength">Mininum {{positionForm.controls.shortName.errors.minlength.requiredLength }} characters </p>
-            <p *ngIf="positionForm.controls.shortName.errors.maxlength">Maximum {{ positionForm.controls.shortName.errors.maxlength.requiredLength }} characters </p>
+          <input type="text" placeholder="Short Name" class="form-control" name="short_name" formControlName="short_name"/>
+          <div *ngIf="positionForm.controls.short_name.errors && positionForm.controls.short_name.dirty">
+            <p *ngIf="positionForm.controls.short_name.errors.required">Field is required</p>
+            <p *ngIf="positionForm.controls.short_name.errors.minlength">Mininum {{positionForm.controls.short_name.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="positionForm.controls.short_name.errors.maxlength">Maximum {{ positionForm.controls.short_name.errors.maxlength.requiredLength }} characters </p>
           </div>
         </div>
         <div class="form-group">

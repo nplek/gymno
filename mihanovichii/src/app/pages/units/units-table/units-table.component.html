@@ -3,7 +3,7 @@
     <nb-card [hidden]="editorEnabled">
       <nb-card-header>
         Unit Table 
-        <button *nbIsGranted="['create', 'unit']" type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
         <button type="button" class="btn btn-primary with-margins" (click)="onClickRefresh()" title="Refresh"><i class="fa fa-sync"></i></button>
       </nb-card-header>
     
@@ -24,20 +24,20 @@
         <div class="form-group">
           <label>Unit Code</label>
           <input type="hidden" class="form-control" formControlName="id"/>
-          <input type="text" placeholder="Unit Name" class="form-control" name="whs_code" formControlName="whs_code"/>
-          <div *ngIf="unitForm.controls.whs_code.errors && unitForm.controls.whs_code.dirty" >
-            <p *ngIf="unitForm.controls.whs_code.errors.required">Field is required</p>
-            <p *ngIf="unitForm.controls.whs_code.errors.minlength">Minimum {{ unitForm.controls.whs_code.errors.minlength.requiredLength }} characters </p>
-            <p *ngIf="unitForm.controls.whs_code.errors.maxlength">Maximum {{ unitForm.controls.whs_code.errors.maxlength.requiredLength }} characters </p>
+          <input type="text" placeholder="Unit Name" class="form-control" name="name" formControlName="name"/>
+          <div *ngIf="unitForm.controls.name.errors && unitForm.controls.name.dirty" >
+            <p *ngIf="unitForm.controls.name.errors.required">Field is required</p>
+            <p *ngIf="unitForm.controls.name.errors.minlength">Minimum {{ unitForm.controls.name.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="unitForm.controls.name.errors.maxlength">Maximum {{ unitForm.controls.name.errors.maxlength.requiredLength }} characters </p>
           </div>
         </div>
         <div class="form-group">
           <label>Name</label>
-          <input type="text" placeholder="Name" class="form-control" name="whs_name" formControlName="whs_name"/>
-          <div *ngIf="unitForm.controls.whs_name.errors && unitForm.controls.whs_name.dirty" >
-            <p *ngIf="unitForm.controls.whs_name.errors.required">Field is required</p>
-            <p *ngIf="unitForm.controls.whs_name.errors.minlength">Minimum {{ unitForm.controls.whs_name.errors.minlength.requiredLength }} characters </p>
-            <p *ngIf="unitForm.controls.whs_name.errors.maxlength">Maximum {{ unitForm.controls.whs_name.errors.maxlength.requiredLength }} characters </p>
+          <input type="text" placeholder="Thai Name" class="form-control" name="tname" formControlName="tname"/>
+          <div *ngIf="unitForm.controls.tname.errors && unitForm.controls.tname.dirty" >
+            <p *ngIf="unitForm.controls.tname.errors.required">Field is required</p>
+            <p *ngIf="unitForm.controls.tname.errors.minlength">Minimum {{ unitForm.controls.tname.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="unitForm.controls.tname.errors.maxlength">Maximum {{ unitForm.controls.tname.errors.maxlength.requiredLength }} characters </p>
           </div>
         </div>
         <div class="form-group">
@@ -63,6 +63,7 @@
       <nb-card-footer>
         <button type="submit" class="btn btn-success with-margins" [disabled]="!unitForm.valid" >{{title}}</button>
         <button type="button" class="btn btn-outline-info with-margins" (click)="onClickBack()">Back</button>
+        <button type="button" class="btn btn-outline-warning with-margins"  *ngIf="isDeleted" (click)="onClickRestore()">Restore</button>
       </nb-card-footer>
     </nb-card>
     </form>

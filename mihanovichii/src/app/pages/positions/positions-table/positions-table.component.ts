@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { LocalDataSource } from 'ng2-smart-table';
+//import { LocalDataSource } from 'ng2-smart-table';
 
-import { PositionService } from '../../../@core/service/position.service';
+import { PositionService, PositionDataSource } from '../../../@core/service/position.service';
 import { Position } from '../../../@core/data/position';
 import { FormBuilder,FormControl,Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-positions-table',
@@ -14,9 +15,9 @@ import { FormBuilder,FormControl,Validators } from '@angular/forms';
 export class PositionsTableComponent implements OnInit {
   message: any;
   positionForm = this.fb.group({
-    posId:[''],
-    name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
-    shortName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(15)]],
+    id:[''],
+    name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    short_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(15)]],
     active: ['', Validators.required],
   });
 
@@ -26,10 +27,14 @@ export class PositionsTableComponent implements OnInit {
   status = "view";
 
   ngOnInit() {
-    this.getData();
   }
+
   settings = {
     mode: 'external',
+    pager: {
+      display: true,
+      perPage: 10,
+    },
     actions: {
       add: false,
       edit: false,
@@ -59,35 +64,34 @@ export class PositionsTableComponent implements OnInit {
           if (data == 'A') {
             return '<i class="fa fa-eye" title="Active"></i>'
           } else {
-            return '<i class="fa fa-eye-slash" title="Inactive" ></i>'
+            return '<i class="fa fa-eye-slash text-danger" title="Inactive" ></i>'
           }
         },
       },
-      /*created_at: {
+      created_at: {
         title: 'Create date',
         type: 'date',
         filter: false,
         valuePrepareFunction: (value) => {
-          return new DatePipe('en-US').transform(new Date(value), 'dd/MM/yyyy HH:mm:ss');
+          if (value) {
+            return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+          } else {
+            return '';
+          }
         }
-      }*/
+      }
     },
   };
 
-  source: LocalDataSource = new LocalDataSource();
+  source: PositionDataSource;
 
   constructor(private service: PositionService,
+    private http: HttpClient,
     private fb: FormBuilder) {
+      this.source = new PositionDataSource(http);
+      this.source.setPaging(1,this.settings.pager.perPage,true);
   }
 
-  getData() {
-    return this.service.getPositions()
-            .subscribe(
-              positions => {
-                this.source.load(positions);
-              }
-            );
-  }
 
   newPosition() {
     this.editorEnabled = false;
@@ -104,9 +108,9 @@ export class PositionsTableComponent implements OnInit {
       this.status = "update";
       this.position = event.data;
       this.positionForm = this.fb.group({
-        posId: [this.position.id],
-        name: new FormControl(this.position.name, [Validators.required, Validators.minLength(4), Validators.maxLength(50)]),
-        short_name: new FormControl(this.position.short_name, [Validators.required, Validators.minLength(3), Validators.maxLength(15)]),
+        id: [this.position.id],
+        name: new FormControl(this.position.name, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
+        short_name: new FormControl(this.position.short_name, [Validators.required, Validators.minLength(2), Validators.maxLength(15)]),
         active: new FormControl(this.position.active, [Validators.required]),
         createAt: [this.position.created_at],
       });
@@ -117,7 +121,7 @@ export class PositionsTableComponent implements OnInit {
         this.service.deletePosition(this.position)
         .subscribe(
           data => {
-            this.getData();
+            this.source.remove(this.position);
           }, 
           error => {
             this.message = error.message;
@@ -132,9 +136,9 @@ export class PositionsTableComponent implements OnInit {
     this.status = "create";
     this.position = new Position();
     this.positionForm = this.fb.group({
-      posId: [''],
-      name: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]),
-      shortName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(15)]),
+      id: [''],
+      name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
+      short_name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(15)]),
       active: new FormControl('', Validators.required),
     });
   }
@@ -147,7 +151,7 @@ export class PositionsTableComponent implements OnInit {
           data => {
             this.editorEnabled = false;
             this.position = new Position();
-            this.getData();
+            this.source.refresh();
           }, 
           error => {
             if (error.status == 409){
@@ -166,7 +170,7 @@ export class PositionsTableComponent implements OnInit {
           data => {
             this.editorEnabled = false;
             this.position = new Position();
-            this.getData();
+            this.source.refresh();
           }, 
           error => { 
             this.editorEnabled = true;
@@ -189,6 +193,6 @@ export class PositionsTableComponent implements OnInit {
   }
 
   onClickRefresh(): void {
-    this.getData();
+    this.source.refresh();
   }
 }

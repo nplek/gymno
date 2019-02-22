@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { LocalDataSource } from 'ng2-smart-table';
+//import { LocalDataSource } from 'ng2-smart-table';
 
 import { Location } from '../../../@core/data/location';
-import { LocationService } from '../../../@core/service/location.service';
+import { LocationService, LocationDataSource } from '../../../@core/service/location.service';
 import { FormBuilder,FormControl,Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-locations-table',
@@ -26,10 +27,13 @@ export class LocationsTableComponent implements OnInit {
   status = "view";
 
   ngOnInit() {
-    this.getData();
   }
   settings = {
     mode: 'external',
+    pager: {
+      display: true,
+      perPage: 10,
+    },
     actions: {
       add: false,
       edit: false,
@@ -59,34 +63,42 @@ export class LocationsTableComponent implements OnInit {
           if (data == 'A') {
             return '<i class="fa fa-eye" title="Active"></i>'
           } else {
-            return '<i class="fa fa-eye-slash" title="Inactive" ></i>'
+            return '<i class="fa fa-eye-slash text-danger" title="Inactive" ></i>'
           }
         }
       },
       created_at: {
-        title: 'Create Date',
-        type: 'string',
-        /*type: 'datetime',
+        title: 'Created',
+        type: 'date',
         valuePrepareFunction: (value) => {
-          return new DatePipe('en-US').transform(new Date(value), 'dd MMM yyyy HH:mm:ss');
-        }*/
+          if (value) {
+            return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+          } else {
+            return '';
+          }
+        }
+      },
+      deleted_at: {
+        title: 'Deleted',
+        type: 'date',
+        valuePrepareFunction: (value) => {
+          if (value) {
+            return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+          } else {
+            return '';
+          }
+        }
       }
     },
   };
 
-  source: LocalDataSource = new LocalDataSource();
+  source: LocationDataSource;
 
   constructor(private service: LocationService,
+    private http: HttpClient,
     private fb: FormBuilder) {
-  }
-
-  getData() {
-    return this.service.getLocations()
-            .subscribe(
-              projects => {
-                this.source.load(projects);
-              }
-            );
+      this.source = new LocationDataSource(http);
+      this.source.setPaging(1,this.settings.pager.perPage,true);
   }
 
   onCustom(event): void {
@@ -112,7 +124,7 @@ export class LocationsTableComponent implements OnInit {
         this.service.deleteLocation(this.location)
         .subscribe(
           data => {
-            this.getData();
+            this.source.remove(this.location);
           }, 
           error => {
             this.message = error.message;
@@ -142,7 +154,7 @@ export class LocationsTableComponent implements OnInit {
           data => {
             this.editorEnabled = false;
             this.location = new Location();
-            this.getData();
+            this.source.refresh();
           }, 
           error => {
             if (error.status == 409){
@@ -161,9 +173,10 @@ export class LocationsTableComponent implements OnInit {
           data => {
             this.editorEnabled = false;
             this.location = new Location();
-            this.getData();
+            this.source.refresh();
           }, 
           error => { 
+            this.message = error.message;
             this.editorEnabled = true;
             this.message = error.message;
           });
@@ -184,6 +197,6 @@ export class LocationsTableComponent implements OnInit {
   }
 
   onClickRefresh(): void {
-    this.getData();
+    this.source.refresh();
   }
 }

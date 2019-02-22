@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbAuthModule, NbDummyAuthStrategy, NbPasswordAuthStrategy } from '@nebular/auth';
+import { NbAuthService, NbAuthModule, NbDummyAuthStrategy, NbPasswordAuthStrategy } from '@nebular/auth';
 import { NbSecurityModule, NbRoleProvider } from '@nebular/security';
 import { of as observableOf, from } from 'rxjs';
 
@@ -34,9 +34,12 @@ const DATA_SERVICES = [
 ];
 
 export class NbSimpleRoleProvider extends NbRoleProvider {
+
   getRole() {
     // here you could provide any role based on any auth flow
-    return observableOf('guest');
+    console.log('NbSimpleRoleProvider.getRole()');
+    //return observableOf('admin');
+    return observableOf(['guest', 'user', 'editor']);
   }
 }
 
@@ -70,6 +73,8 @@ export const NB_CORE_PROVIDERS = [
         showMessages: {
           success: true,
         },
+        defaultErrors: ['Login/Email combination is not correct, please try again.'],
+        defaultMessages: ['You have been successfully logged in.'],
       },
       /*register: {
         socialLinks: socialLinks,
@@ -80,7 +85,8 @@ export const NB_CORE_PROVIDERS = [
   NbSecurityModule.forRoot({
     accessControl: {
       guest: {
-        view: '*',
+        //view: '*',
+        view: ['email']
       },
       user: {
         parent: 'guest',
@@ -88,6 +94,13 @@ export const NB_CORE_PROVIDERS = [
         edit: '*',
         remove: '*',
       },
+      admin: {
+        parent: 'user',
+        view: ['company','department'],
+        create: ['company','department'],
+        edit: ['company','department'],
+        remove: ['company','department']
+      }
     },
   }).providers,
 

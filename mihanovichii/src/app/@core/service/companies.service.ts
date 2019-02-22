@@ -4,13 +4,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Company } from '../data/company';
-import { LocalDataSource, ServerDataSource } from 'ng2-smart-table';
+import { LocalDataSource } from 'ng2-smart-table';
 
 const httpOptions = {
     headers: new HttpHeaders({ 
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer ' + localStorage.getItem('gymno_token')
+        'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('auth_app_token')).value
     })
 };
 

@@ -18,6 +18,8 @@ class Warehouse extends JsonResource
             'id' => $this->id,
             'whs_code' => $this->whs_code,
             'whs_name' => $this->whs_name,
+            'active' => $this->active,
+            'created_at' => $this->created_at,
             'deleted_at' => $this->deleted_at,
         ];
     }

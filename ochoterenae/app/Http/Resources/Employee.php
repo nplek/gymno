@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Location as LocationResource;
 use App\Http\Resources\Position as PositionResource;
 use App\Http\Resources\Department as DepartmentResource;
-
+use App\Http\Resources\EmployeePositionList as empPostion;
 class Employee extends JsonResource
 {
     /**
@@ -26,9 +26,12 @@ class Employee extends JsonResource
             'phone' => $this->phone,
             'photo' => $this->photo,
             'positions' => PositionResource::collection($this->positions),
+            //'positions' => empPostion::collection($this->positions),
             'manager_id' => $this->manager_id,
             'manager' => new EmployeeList($this->manager),
             'type' => $this->type,
+            //'employeeType' => $this->type,
+            'email' => $this->email,
             'active' => $this->active,
             'department_id' => $this->department_id,
             'department' => new DepartmentResource($this->department),

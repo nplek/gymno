@@ -11,12 +11,30 @@ use Auth;
 
 class LocationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = [];
+        if ($request['active_like']){
+            $search = $request['active_like'];
+            array_push($query,['active','=',$search]);
+        }
+
+        if ($request['short_name_like']) {
+            $search = $request['short_name_like'];
+            array_push($query,['short_name', 'like', '%'.$search.'%']);
+        }
+
+        if ($request['name_like']) {
+            $search = $request['name_like'];
+            array_push($query,['name', 'like', '%'.$search.'%']);
+        }
+
+        $pageSize = min($request['page_size'],50);
         //if (Auth::user()->can('restore-location') ){
             //return new LocationCollection(Location::withTrashed()->paginate(50));
+            return new LocationCollection(Location::where($query)->withTrashed()->paginate($pageSize));
         //} else {
-            return new LocationCollection(Location::paginate(50));
+            //return new LocationCollection(Location::paginate(50));
         //}
     }
 

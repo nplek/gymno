@@ -12,12 +12,31 @@ use Auth;
 
 class EmployeeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = [];
+        if ($request['active_like']){
+            $search = $request['active_like'];
+            array_push($query,['active','=',$search]);
+        }
+
+        if ($request['short_name_like']) {
+            $search = $request['short_name_like'];
+            array_push($query,['short_name', 'like', '%'.$search.'%']);
+        }
+
+        if ($request['name_like']) {
+            $search = $request['name_like'];
+            array_push($query,['name', 'like', '%'.$search.'%']);
+        }
+
+        $pageSize = min($request['page_size'],50);
+        //$pageSize = 10;
         //if (Auth::user()->can('restore-employee') ){
             //return new EmployeeCollection(Employee::withTrashed()->paginate(50));
+            return new EmployeeCollection(Employee::where($query)->withTrashed()->paginate($pageSize));
         //} else {
-            return new EmployeeCollection(Employee::paginate(50));
+            //return new EmployeeCollection(Employee::paginate(50));
         //}
     }
 
@@ -28,7 +47,7 @@ class EmployeeController extends Controller
 
     public function listManager()
     {
-        return EmployeeResource::collection(Employee::active()->manager()->get());
+        return EmployeeList::collection(Employee::active()->manager()->get());
     }
 
     public function show($id)
@@ -41,9 +60,9 @@ class EmployeeController extends Controller
         $this->validate($request, [
             'first_name' => 'required|max:100',
             'last_name' => 'required|max:100',
-            'employee_id'=>'required|max:10',
-            'location_id' => 'required',
-            'positions' => 'required',
+            'employee_id'=>'required|max:10|unique:employees',
+            //'location_id' => 'required',
+            //'positions' => 'required',
             'type' => 'required',
             'active' => 'required',
             'mobile'=>'max:30',
@@ -54,19 +73,19 @@ class EmployeeController extends Controller
 
         $employee->first_name = $request['first_name'];
         $employee->last_name = $request['last_name'];
-        $employee->location_id = $request['location_id'];
+        //$employee->location_id = $request['location_id'];
         $employee->manager_id = $request['manager_id'];
         $employee->employee_id = $request['employee_id'];
         $employee->department_id = $request['department_id'];
         $employee->mobile = $request['mobile'];
         $employee->phone = $request['phone'];
-
+        $employee->email = $request['email'];
         $employee->type = $request['type'];
 
         $employee->active = $request['active'];
         $employee->save();
 
-        $positions = $request['positions'];
+        /*$positions = $request['positions'];
         $posId = [];
         foreach($positions as $position){
             $posId[] = $position['id'];
@@ -82,7 +101,7 @@ class EmployeeController extends Controller
                     'user_id' => Auth::user()->id,
                 ])
                 ->log('sync');
-        }        
+        }  */      
 
         return new EmployeeResource($employee);
     }
@@ -92,20 +111,23 @@ class EmployeeController extends Controller
         $this->validate($request, [
             'first_name'=>'required|max:100',
             'last_name'=>'required|max:100',
-            'employee_id'=>'required|max:10',
-            'location_id'=>'required',
+            //'employee_id'=>'required|max:10|unique:employees',
+            //'location_id'=>'required',
             'mobile'=>'max:30',
             'phone'=>'max:30'
         ]);
         $employee = Employee::findOrFail($id);
+        //$employee->employee_id = $request['employee_id'];
         $employee->first_name = $request['first_name'];
         $employee->last_name = $request['last_name'];
-        $employee->employee_id = $request['employee_id'];
+        $employee->manager_id = $request['manager_id'];
         $employee->mobile = $request['mobile'];
         $employee->phone = $request['phone'];
-        $employee->location_id = $request['location_id'];
+        $employee->email = $request['email'];
+        //$employee->location_id = $request['location_id'];
         $employee->department_id = $request['department_id'];
         $employee->type = $request['type'];
+        $employee->active = $request['active'];
         $employee->save();
 
         $positions = $request['positions'];
@@ -115,9 +137,10 @@ class EmployeeController extends Controller
         foreach($olds as $o){
             $posOld[] = $o['id'];
         }
-        foreach($positions as $position){
+        $posId = $positions;
+        /*foreach($positions as $position){
             $posId[] = $position['id'];
-        }
+        }*/
         $diff = collect($posId)->diff(collect($posOld));
         if ($diff){
             if (isset($posId)) {
@@ -146,7 +169,7 @@ class EmployeeController extends Controller
                     ])
                     ->log('detach');
             }
-        }   
+        } 
 
         return new EmployeeResource($employee);
 

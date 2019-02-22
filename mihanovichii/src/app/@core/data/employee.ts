@@ -10,9 +10,11 @@ export class Employee {
     phone: string;
     photo: string;
     email: string;
-    employeeType: string;
+    type: string;
+    department_id: number;
     department: Department;
-    position: Position;
+    positions: Position[];
+    manager_id: number;
     manager: Employee;
     active: string;
     created_at: string;

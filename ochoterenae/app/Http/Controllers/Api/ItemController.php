@@ -11,12 +11,30 @@ use Auth;
 
 class ItemController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = [];
+        if ($request['active_like']){
+            $search = $request['active_like'];
+            array_push($query,['active','=',$search]);
+        }
+
+        if ($request['short_name_like']) {
+            $search = $request['short_name_like'];
+            array_push($query,['short_name', 'like', '%'.$search.'%']);
+        }
+
+        if ($request['name_like']) {
+            $search = $request['name_like'];
+            array_push($query,['name', 'like', '%'.$search.'%']);
+        }
+
+        $pageSize = min($request['page_size'],50);
         //if (Auth::user()->can('restore-item') ){
             //return new ItemCollection(Item::withTrashed()->paginate(50));
+            return new ItemCollection(Item::where($query)->withTrashed()->paginate($pageSize));
         //} else {
-            return new ItemCollection(Item::paginate(50));
+            //return new ItemCollection(Item::paginate(50));
         //}
     }
 
@@ -29,17 +47,17 @@ class ItemController extends Controller
     {
         $this->validate($request, [
             'item_code'=>'required|max:20|min:3|unique:items',
-            'name'=>'required|min:3|max:50',
-            'main_unit'=>'required',
-            'unit_id'=>'required',
+            'name'=>'required|min:3|max:100',
+            'description'=>'max:200',
+            'unit_name'=>'required|max:10',
         ]);
 
         $item = new Item();
         $item->item_code = $request['item_code'];
         $item->name = $request['name'];
         $item->description = $request['description'];
-        $item->unit_name = $request['main_unit'];
-        //$item->unit_id = $request['unit_id'];
+        $item->unit_name = $request['unit_name'];
+        $item->active = $request['active'];
         $item->save();
 
         return new ItemResource($item);
@@ -54,14 +72,15 @@ class ItemController extends Controller
     {
         $this->validate($request, [
             'name'=>'required|min:3|max:50',
-            'main_unit'=>'required',
-            'unit_id'=>'required',
+            'description'=>'max:200',
+            'unit_name'=>'required|max:10',
         ]);
         $item = Item::findOrFail($id);
+        //$item->item_code = $request['item_code'];
         $item->name = $request['name'];
         $item->description = $request['description'];
-        $item->main_unit = $request['main_unit'];
-        $item->unit_id = $request['unit_id'];
+        $item->unit_name = $request['unit_name'];
+        $item->active = $request['active'];
         $item->save();
         return new ItemResource($item);
     }

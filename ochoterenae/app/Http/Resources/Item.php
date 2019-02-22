@@ -18,8 +18,11 @@ class Item extends JsonResource
             'id' => $this->id,
             'item_code' => $this->item_code,
             'name' => $this->name,
+            'unit_name' => $this->unit_name,
             'description' => $this->description,
             'deleted_at' => $this->deleted_at,
+            'created_at' => $this->created_at,
+            'active' => $this->active,
         ];
     }
 }

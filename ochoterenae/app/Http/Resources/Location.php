@@ -19,6 +19,7 @@ class Location extends JsonResource
             'name' => $this->name,
             'short_name' => $this->short_name,
             'deleted_at' => $this->deleted_at,
+            'created_at' => $this->created_at,
             'active' => $this->active,
         ];
     }

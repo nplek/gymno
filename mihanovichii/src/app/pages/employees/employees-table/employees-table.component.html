@@ -3,7 +3,7 @@
     <nb-card [hidden]="editorEnabled">
       <nb-card-header>
         Employee Table&nbsp;
-            <button *nbIsGranted="['create', 'company']" type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
+            <button type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
             <button type="button" class="btn btn-primary with-margins" (click)="onClickRefresh()" title="Refresh"><i class="fa fa-sync"></i></button>
       </nb-card-header>
     
@@ -72,48 +72,55 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Position</label>
-          <select class="form-control" formControlName="position" [(ngModel)]="positionSelected">
-            <option class="form-control"  [ngValue]="c" *ngFor="let c of positions" [selected]="positionSelected.id == c.id" >{{ c.short_name }} -- {{c.name}}</option>
-          </select>
-          <div *ngIf="employeeForm.controls.position.errors && employeeForm.controls.position.dirty">
-            <p *ngIf="employeeForm.controls.position.errors.required">Field is required</p>
-          </div>
+            <label>Department</label>
+            <select class="form-control" formControlName="department" [(ngModel)]="departmentSelected">
+              <option class="form-control"  [ngValue]="d" *ngFor="let d of departments" [selected]="departmentSelected.id == d.id">{{ d.short_name }} -- {{d.name}}</option>
+            </select>
+            <div *ngIf="employeeForm.controls.department.errors && employeeForm.controls.department.dirty">
+              <p *ngIf="employeeForm.controls.department.errors.required">Field is required</p>
+            </div>
         </div>
         <div class="form-group">
-          <label>Department</label>
-          <select class="form-control" formControlName="department" [(ngModel)]="departmentSelected">
-            <option class="form-control"  [ngValue]="d" *ngFor="let d of departments" [selected]="departmentSelected.id == d.id" >{{ d.short_name }} -- {{d.name}}</option>
+          <label>Headman</label>
+          <select class="form-control" formControlName="manager" [(ngModel)]="managerSelected">
+            <option value=null>Unknown</option>
+            <option class="form-control"  [ngValue]="m" *ngFor="let m of managers" [selected]="managerSelected != null && managerSelected.id == m.id">{{ m.employee_id }} -- {{m.first_name}} {{ last_name }}</option>
           </select>
-          <div *ngIf="employeeForm.controls.department.errors && employeeForm.controls.department.dirty">
-            <p *ngIf="employeeForm.controls.department.errors.required">Field is required</p>
+          <div *ngIf="employeeForm.controls.manager.errors && employeeForm.controls.manager.dirty">
+            <p *ngIf="employeeForm.controls.manager.errors.required">Field is required</p>
           </div>
         </div>
         <div class="form-group">
           <label>Employee type</label>
           <label class="custom-control custom-radio">
-            <input type="radio" class="custom-control-input" id="chief" value="C" name="employeeType" formControlName="employeeType">
+            <input type="radio" class="custom-control-input" id="chief" value="C" name="type" formControlName="type">
             <span class="custom-control-indicator"></span>
             <span class="custom-control-description">Chief Of</span>
           </label>
           <label class="custom-control custom-radio">
-            <input type="radio" class="custom-control-input" id="director" value="D" name="employeeType" formControlName="employeeType" >
+            <input type="radio" class="custom-control-input" id="director" value="D" name="type" formControlName="type" >
             <span class="custom-control-indicator"></span>
             <span class="custom-control-description">Director</span>
           </label>
           <label class="custom-control custom-radio">
-            <input type="radio" class="custom-control-input" id="manager" value="M" name="employeeType" formControlName="employeeType" >
+            <input type="radio" class="custom-control-input" id="manager" value="M" name="type" formControlName="type" >
             <span class="custom-control-indicator"></span>
             <span class="custom-control-description">Manager</span>
           </label>
           <label class="custom-control custom-radio">
-            <input type="radio" class="custom-control-input" id="staff" value="S" name="employeeType" formControlName="employeeType" >
+            <input type="radio" class="custom-control-input" id="staff" value="S" name="type" formControlName="type" >
             <span class="custom-control-indicator"></span>
             <span class="custom-control-description">Staff</span>
           </label>
-          <div *ngIf="employeeForm.controls.employeeType.errors && employeeForm.controls.employeeType.dirty">
-            <p *ngIf="employeeForm.controls.employeeType.errors.required">Field is required</p>
+          <div *ngIf="employeeForm.controls.type.errors && employeeForm.controls.type.dirty">
+            <p *ngIf="employeeForm.controls.type.errors.required">Field is required</p>
           </div>
+        </div>
+        <div class="form-group">
+          <label>Positions</label>
+          <br/>
+          <ss-multiselect-dropdown [settings]="mySettings" [options]="positionList" [texts]="myTexts" formControlName="positions" [(ngModel)]="positions" (ngModelChange)="onChange($event)">
+          </ss-multiselect-dropdown>
         </div>
         <div class="form-group">
           <label>Status</label>

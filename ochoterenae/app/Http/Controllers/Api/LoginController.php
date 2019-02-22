@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Validation\ValidationException;
 use App\User; 
 use Auth; 
+use App\Http\Resources\User as UserResource;
+use App\Http\Resources\UserCollection;
 
 class LoginController extends Controller
 {
@@ -96,6 +98,8 @@ class LoginController extends Controller
     protected function sendLoginResponse(Request $request)
     {
         $user = Auth::user();
+        $roles = $user->roles();
+        $role['role'] = $roles;
         $request->session()->regenerate();
         
         $tokenResult = $user->createToken('gymno-ocho',['*']);
@@ -108,7 +112,7 @@ class LoginController extends Controller
 
         $this->clearLoginAttempts($request);
 
-        return response()->json(['message' => 'Login success.', 'data' => ['token' => $access_token], 'token' => $token],200);
+        return response()->json(['message' => 'Login success.', 'data' => ['token' => $access_token, 'payload' => $role], 'token' => $token],200);
     }
 
     protected function sendFailedUserNotActiveResponse(Request $request)
@@ -133,5 +137,11 @@ class LoginController extends Controller
         $request->session()->invalidate();
 
         return $this->loggedOut($request) ?: redirect('/app/#/auth/login');
+    }
+
+    public function getRole(Request $request)
+    {
+        $user = Auth::user();
+        return new UserResource($user);
     }
 }

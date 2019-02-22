@@ -3,7 +3,7 @@
       <nb-card [hidden]="editorEnabled">
         <nb-card-header>
           Department Table &nbsp;
-          <button *nbIsGranted="['create', 'company']" type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
+          <button type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
           <button type="button" class="btn btn-primary with-margins" (click)="onClickRefresh()" title="Refresh"><i class="fa fa-sync"></i></button>
         </nb-card-header>
 
@@ -23,7 +23,7 @@
         <nb-card-body>
           <div class="form-group">
             <label>Name</label>
-            <input type="hidden" class="form-control" formControlName="depId"/>
+            <input type="hidden" class="form-control" formControlName="id"/>
             <input type="text" placeholder="Name" class="form-control" name="name" formControlName="name"/>
             <div *ngIf="departmentForm.controls.name.errors && departmentForm.controls.name.dirty" >
               <p *ngIf="departmentForm.controls.name.errors.required">Field is required</p>
@@ -45,7 +45,7 @@
             <select class="form-control" formControlName="company" [(ngModel)]="companySelected">
               <option class="form-control"  [ngValue]="c" *ngFor="let c of companies" [selected]="companySelected.id == c.id" >{{ c.short_name }} -- {{c.name}}</option>
             </select>
-            <div *ngIf="departmentForm.controls.company.errors && departmentForm.controls.active.dirty">
+            <div *ngIf="departmentForm.controls.company.errors && departmentForm.controls.company.dirty">
               <p *ngIf="departmentForm.controls.company.errors.required">Field is required</p>
             </div>
           </div>

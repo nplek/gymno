@@ -15,6 +15,13 @@ use Auth;
 
 class UserController extends Controller
 {
+    
+    public function getRole(Request $request)
+    {
+        $user = Auth::user();
+        return new UserResource($user);
+    }
+
     public function index()
     {
         //if (Auth::user()->can('restore-user') ){

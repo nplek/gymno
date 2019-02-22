@@ -12,7 +12,7 @@ return [
             'user' => 'c,r,u,v',
             'role' => 'c,r,u,v',
             'permission' => 'c,r,u,v',
-            'team' => 'c,r,u,v',
+            //'team' => 'c,r,u,v',
             'activitylog' => 'r,d,v',
             'accesslog' => 'r,d,v',
             'securitylog' => 'r,d,v',

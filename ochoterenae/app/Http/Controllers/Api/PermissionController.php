@@ -10,8 +10,26 @@ use App\Http\Resources\Permission as PermissionResource;
 
 class PermissionController extends Controller
 {
-    public function index() {
-        return new PermissionCollection(Permission::paginate(50));
+    public function index(Request $request) {
+        $query = [];
+        if ($request['active_like']){
+            $search = $request['active_like'];
+            array_push($query,['active','=',$search]);
+        }
+
+        if ($request['short_name_like']) {
+            $search = $request['short_name_like'];
+            array_push($query,['short_name', 'like', '%'.$search.'%']);
+        }
+
+        if ($request['name_like']) {
+            $search = $request['name_like'];
+            array_push($query,['name', 'like', '%'.$search.'%']);
+        }
+
+        $pageSize = min($request['page_size'],50);
+        //return new PermissionCollection(Permission::paginate(50));
+        return new PermissionCollection(Permission::where($query)->withTrashed()->paginate($pageSize));
     }
 
     public function list()

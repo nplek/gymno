@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NbLoginComponent } from '@nebular/auth';
-import { AuthenService, UserAuthen } from '../../@core/service/authen.service';
+//import { AuthenService, UserAuthen } from '../../@core/service/authen.service';
 import { HttpClient } from '@angular/common/http';
 //import { useAnimation } from '@angular/animations';
 //import { userInfo } from 'os';
@@ -20,9 +20,6 @@ export class NgxLoginComponent extends NbLoginComponent {
         _this.submitted = false;
         if (result.isSuccess()) {
             _this.messages = result.getMessages();
-            console.log(result.getToken().getValue());
-            //token = result.getToken().token;
-            localStorage.setItem('gymno_token', result.getToken().getValue());
         }
         else {
             _this.errors = result.getErrors();

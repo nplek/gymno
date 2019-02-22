@@ -1,8 +1,7 @@
 export class Permission {
-    permissionId: number;
+    id: number;
     name: string;
-    displayName: string;
-    description: string;
-    createdAt: string;
-    updatedAt: string;
+    display_name: string;
+    created_at: string;
+    updated_at: string;
 }

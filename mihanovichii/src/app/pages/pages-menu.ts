@@ -15,11 +15,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
       {
         title: 'Login',
-        link: '/auth/login'
+        link: '/#/auth/login'
       },
       {
         title: 'Logout',
-        url: '/logout'
+        url: '/#/auth/logout'
       },
     ],
   },

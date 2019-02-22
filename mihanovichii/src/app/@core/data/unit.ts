@@ -3,6 +3,6 @@ export class Unit {
     name: string;
     tname: string;
     active: string;
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    deleted_at: string;
 }

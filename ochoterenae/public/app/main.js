@@ -8,6 +8,10 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./auth/auth.module": [
+		"./src/app/auth/auth.module.ts",
+		"auth-auth-module"
+	],
 	"./companies/companies.module": [
 		"./src/app/pages/companies/companies.module.ts",
 		"default~companies-companies-module~departments-departments-module~employees-employees-module~items-i~0e5e477f",
@@ -138,43 +142,7 @@ var __param = (undefined && undefined.__param) || function (paramIndex, decorato
 
 
 
-//import { ElectricityData } from './data/electricity';
-//import { SmartTableData } from './data/smart-table';
-//import { UserActivityData } from './data/user-activity';
-//import { OrdersChartData } from './data/orders-chart';
-//import { ProfitChartData } from './data/profit-chart';
-//import { TrafficListData } from './data/traffic-list';
-//import { EarningData } from './data/earning';
-//import { OrdersProfitChartData } from './data/orders-profit-chart';
-//import { TrafficBarData } from './data/traffic-bar';
-//import { ProfitBarAnimationChartData } from './data/profit-bar-animation-chart';
-//import { TemperatureHumidityData } from './data/temperature-humidity';
-//import { SolarData } from './data/solar';
-//import { TrafficChartData } from './data/traffic-chart';
-//import { StatsBarData } from './data/stats-bar';
-//import { CountryOrderData } from './data/country-order';
-//import { StatsProgressBarData } from './data/stats-progress-bar';
-//import { VisitorsAnalyticsData } from './data/visitors-analytics';
-//import { SecurityCamerasData } from './data/security-cameras';
 
-//import { ElectricityService } from './mock/electricity.service';
-//import { SmartTableService } from './mock/smart-table.service';
-//import { UserActivityService } from './mock/user-activity.service';
-//import { OrdersChartService } from './mock/orders-chart.service';
-//import { ProfitChartService } from './mock/profit-chart.service';
-//import { TrafficListService } from './mock/traffic-list.service';
-//import { EarningService } from './mock/earning.service';
-//import { OrdersProfitChartService } from './mock/orders-profit-chart.service';
-//import { TrafficBarService } from './mock/traffic-bar.service';
-//import { ProfitBarAnimationChartService } from './mock/profit-bar-animation-chart.service';
-//import { TemperatureHumidityService } from './mock/temperature-humidity.service';
-//import { SolarService } from './mock/solar.service';
-//import { TrafficChartService } from './mock/traffic-chart.service';
-//import { StatsBarService } from './mock/stats-bar.service';
-//import { CountryOrderService } from './mock/country-order.service';
-//import { StatsProgressBarService } from './mock/stats-progress-bar.service';
-//import { VisitorsAnalyticsService } from './mock/visitors-analytics.service';
-//import { SecurityCamerasService } from './mock/security-cameras.service';
 
 var socialLinks = [
     {
@@ -198,31 +166,49 @@ var NbSimpleRoleProvider = /** @class */ (function (_super) {
     }
     NbSimpleRoleProvider.prototype.getRole = function () {
         // here you could provide any role based on any auth flow
-        return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["of"])('guest');
+        console.log('NbSimpleRoleProvider.getRole()');
+        //return observableOf('admin');
+        return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["of"])(['guest', 'user', 'editor']);
     };
     return NbSimpleRoleProvider;
 }(_nebular_security__WEBPACK_IMPORTED_MODULE_3__["NbRoleProvider"]));
 
 var NB_CORE_PROVIDERS = _mock_mock_data_module__WEBPACK_IMPORTED_MODULE_9__["MockDataModule"].forRoot().providers.concat(DATA_SERVICES, _nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbAuthModule"].forRoot({
     strategies: [
-        _nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbDummyAuthStrategy"].setup({
+        /*NbDummyAuthStrategy.setup({
+          name: 'email',
+          delay: 3000,
+        }),*/
+        _nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbPasswordAuthStrategy"].setup({
             name: 'email',
-            delay: 3000,
+            baseEndpoint: '',
+            login: {
+                endpoint: 'http://localhost:8000/api/auth/login',
+                method: 'post',
+            },
+            logout: {
+                endpoint: 'http://localhost:8000/api/auth/logout',
+                method: 'get'
+            }
         }),
     ],
     forms: {
         login: {
             socialLinks: socialLinks,
-        },
-        register: {
-            socialLinks: socialLinks,
+            redirectDelay: 0,
+            showMessages: {
+                success: true,
+            },
+            defaultErrors: ['Login/Email combination is not correct, please try again.'],
+            defaultMessages: ['You have been successfully logged in.'],
         },
     },
 }).providers, [
     _nebular_security__WEBPACK_IMPORTED_MODULE_3__["NbSecurityModule"].forRoot({
         accessControl: {
             guest: {
-                view: '*',
+                //view: '*',
+                view: ['email']
             },
             user: {
                 parent: 'guest',
@@ -230,6 +216,13 @@ var NB_CORE_PROVIDERS = _mock_mock_data_module__WEBPACK_IMPORTED_MODULE_9__["Moc
                 edit: '*',
                 remove: '*',
             },
+            admin: {
+                parent: 'user',
+                view: ['company', 'department'],
+                create: ['company', 'department'],
+                edit: ['company', 'department'],
+                remove: ['company', 'department']
+            }
         },
     }).providers,
     {
@@ -314,25 +307,6 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
-/*import { ElectricityService } from './electricity.service';
-import { SmartTableService } from './smart-table.service';*/
-//import { UserActivityService } from './user-activity.service';
-/*import { OrdersChartService } from './orders-chart.service';
-import { ProfitChartService } from './profit-chart.service';
-import { TrafficListService } from './traffic-list.service';*/
-//import { PeriodsService } from './periods.service';
-/*import { EarningService } from './earning.service';
-import { OrdersProfitChartService } from './orders-profit-chart.service';
-import { TrafficBarService } from './traffic-bar.service';
-import { ProfitBarAnimationChartService } from './profit-bar-animation-chart.service';
-import { TemperatureHumidityService } from './temperature-humidity.service';
-import { SolarService } from './solar.service';
-import { TrafficChartService } from './traffic-chart.service';
-import { StatsBarService } from './stats-bar.service';
-import { CountryOrderService } from './country-order.service';
-import { StatsProgressBarService } from './stats-progress-bar.service';
-import { VisitorsAnalyticsService } from './visitors-analytics.service';
-import { SecurityCamerasService } from './security-cameras.service';*/
 var SERVICES = [
     _users_service__WEBPACK_IMPORTED_MODULE_2__["UserService"],
 ];
@@ -3194,7 +3168,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppRoutingModule", function() { return AppRoutingModule; });
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _nebular_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @nebular/auth */ "./node_modules/@nebular/auth/index.js");
+/* harmony import */ var _auth_guard_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./auth-guard.service */ "./src/app/auth-guard.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3205,37 +3179,45 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 var routes = [
-    { path: 'pages', loadChildren: 'app/pages/pages.module#PagesModule' },
+    {
+        path: 'pages',
+        canActivate: [_auth_guard_service__WEBPACK_IMPORTED_MODULE_2__["AuthGuard"]],
+        loadChildren: 'app/pages/pages.module#PagesModule',
+    },
     {
         path: 'auth',
-        component: _nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbAuthComponent"],
-        children: [
-            {
-                path: '',
-                component: _nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbLoginComponent"],
-            },
-            {
-                path: 'login',
-                component: _nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbLoginComponent"],
-            },
-            {
-                path: 'register',
-                component: _nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbRegisterComponent"],
-            },
-            {
-                path: 'logout',
-                component: _nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbLogoutComponent"],
-            },
-            {
-                path: 'request-password',
-                component: _nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbRequestPasswordComponent"],
-            },
-            {
-                path: 'reset-password',
-                component: _nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbResetPasswordComponent"],
-            },
-        ],
+        loadChildren: './auth/auth.module#NgxAuthModule',
     },
+    /*{
+      path: 'auth',
+      component: NbAuthComponent,
+      children: [
+        {
+          path: '',
+          component: NbLoginComponent,
+        },
+        {
+          path: 'login',
+          component: NbLoginComponent,
+        },
+        {
+          path: 'register',
+          component: NbRegisterComponent,
+        },
+        {
+          path: 'logout',
+          component: NbLogoutComponent,
+        },
+        {
+          path: 'request-password',
+          component: NbRequestPasswordComponent,
+        },
+        {
+          path: 'reset-password',
+          component: NbResetPasswordComponent,
+        },
+      ],
+    },*/
     { path: '', redirectTo: 'pages', pathMatch: 'full' },
     { path: '**', redirectTo: 'pages' },
 ];
@@ -3327,6 +3309,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
 /* harmony import */ var _theme_theme_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./@theme/theme.module */ "./src/app/@theme/theme.module.ts");
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm5/ng-bootstrap.js");
+/* harmony import */ var _auth_guard_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./auth-guard.service */ "./src/app/auth-guard.service.ts");
+/* harmony import */ var _nebular_security__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @nebular/security */ "./node_modules/@nebular/security/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3348,6 +3332,9 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
+//import { RoleProvider } from './role.provider';
+
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -3362,14 +3349,71 @@ var AppModule = /** @class */ (function () {
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_9__["NgbModule"].forRoot(),
                 _theme_theme_module__WEBPACK_IMPORTED_MODULE_8__["ThemeModule"].forRoot(),
                 _core_core_module__WEBPACK_IMPORTED_MODULE_5__["CoreModule"].forRoot(),
+                _nebular_security__WEBPACK_IMPORTED_MODULE_11__["NbSecurityModule"].forRoot(),
             ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_6__["AppComponent"]],
             providers: [
                 { provide: _angular_common__WEBPACK_IMPORTED_MODULE_0__["APP_BASE_HREF"], useValue: '/' },
+                _auth_guard_service__WEBPACK_IMPORTED_MODULE_10__["AuthGuard"],
             ],
         })
     ], AppModule);
     return AppModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/auth-guard.service.ts":
+/*!***************************************!*\
+  !*** ./src/app/auth-guard.service.ts ***!
+  \***************************************/
+/*! exports provided: AuthGuard */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthGuard", function() { return AuthGuard; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _nebular_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @nebular/auth */ "./node_modules/@nebular/auth/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var AuthGuard = /** @class */ (function () {
+    function AuthGuard(authService, router) {
+        this.authService = authService;
+        this.router = router;
+    }
+    AuthGuard.prototype.canActivate = function () {
+        var _this = this;
+        //return this.authService.isAuthenticated();
+        //console.log(this.authService.isAuthenticated());
+        //this.authService.logout('email');
+        return this.authService.isAuthenticated()
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (authenticated) {
+            if (!authenticated) {
+                _this.router.navigate(['auth/login']);
+            }
+        }));
+    };
+    AuthGuard = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
+        __metadata("design:paramtypes", [_nebular_auth__WEBPACK_IMPORTED_MODULE_2__["NbAuthService"], _angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]])
+    ], AuthGuard);
+    return AuthGuard;
 }());
 
 
@@ -3397,7 +3441,11 @@ __webpack_require__.r(__webpack_exports__);
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    apiUrl: 'http://localhost:8000'
+    apiUrl: 'http://localhost:8000',
+    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjQ2OWNjOTVmYjNkOWFjY2E0YjM5YThiMzFkNWQwNTkwYjk5MjViZjNlY2VlZDlmNDVkZWUyZGZjNTExZjYyMzg0Njg5Mzk1MTdhMmNlZGMwIn0.eyJhdWQiOiIxIiwianRpIjoiNDY5Y2M5NWZiM2Q5YWNjYTRiMzlhOGIzMWQ1ZDA1OTBiOTkyNWJmM2VjZWVkOWY0NWRlZTJkZmM1MTFmNjIzODQ2ODkzOTUxN2EyY2VkYzAiLCJpYXQiOjE1NTAxMjg3ODIsIm5iZiI6MTU1MDEyODc4MiwiZXhwIjoxNTgxNjY0NzgyLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.V1egMz0oIt7lB4YnXMlq6j0iXj6zy_YrDj8ElP8DX-QdxmHrZDbHyKYKZdJmjgWERTBfajre3KbTQGEYItdtvmhhg-hYx2wezsQ4dWqtAxsI0_0xHPnh8LCBlO8WMhvpUvBjsW7dyv0XS6BthuOOGhlKhT6SniwgLtsdg8_ZcUyrLv7_L2Q5d1iS36J36g7-pn0OjvI4YmTdaxy8O6p__9aX_3SOuLHr-ulZMoXguD5F6HH6DAGKln1I9-UwGUy_mLlK0mwQ2TfVrOGaWmGEW_Xvqgv_JwA70jzP0GMlYfRiQ9FUFjA08_x6mNsjEUHrff0qj7YoMGuFPdTjm1iW9U24pqT6cT87VpydJZoK8IFcydtLeK57nXhE7vD1HQogqqJJDD6EW2L7R2XhOdjUHijXW7mohRyLx77ervbeIN0b6j216oKgWO4RI9sbHKqe5fbipNWy78ohWpTMZOvTn2Y0FjAezUYYVy6N9IV-QO98h4s7g32fiwmYcm-8fCfZJL_oxjpaflrVyDyvLU86OQBwZToPxgCWaH0DWfBhuBnvxf0KiAfV-MHld8NAXKY5wXmVvL9CT9QGcuPIpMMGh8qNGZIyVowAlGvrlZgfmvp6kQB8T2v6SbssteCBhBcfp6qxITw3Fs29nks7c77z_IL01Ac4mr90RLSCePdhiWg',
+    client_secret: 'izwEdHIBWYGhP9jSa9is89hJ4h972TjLHYwo2JX2',
+    client_id: '2',
+    grant_type: 'password'
 };
 
 

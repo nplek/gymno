@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { LocalDataSource } from 'ng2-smart-table';
 
 import { Item } from '../../../@core/data/item';
-import { ItemService } from '../../../@core/service/item.service';
+import { ItemService, ItemDataSource } from '../../../@core/service/item.service';
 import { FormBuilder,FormControl,Validators } from '@angular/forms';
-
+import { HttpClient } from '@angular/common/http';
+import { Unit } from '../../../@core/data/unit';
+import { UnitService } from '../../../@core/service/unit.service';
 @Component({
   selector: 'ngx-items-table',
   templateUrl: './items-table.component.html',
@@ -22,17 +23,22 @@ export class ItemsTableComponent implements OnInit {
     active: ['', Validators.required],
   });
 
+  units: Unit[];
   item: Item = new Item();
   editorEnabled = false;
   title = "Create";
   status = "view";
 
   ngOnInit() {
-    this.getData();
+    this.getUnitList();
   }
 
   settings = {
     mode: 'external',
+    pager: {
+      display: true,
+      perPage: 20
+    },
     actions: {
       add: false,
       edit: false,
@@ -55,6 +61,10 @@ export class ItemsTableComponent implements OnInit {
         title: 'Name',
         type: 'string',
       },
+      unit_name: {
+        title: 'Unit',
+        type: 'string'
+      },
       active: {
         title: 'Active',
         type: 'html',
@@ -62,33 +72,47 @@ export class ItemsTableComponent implements OnInit {
           if (data == 'A') {
             return '<i class="fa fa-eye" title="Active"></i>'
           } else {
-            return '<i class="fa fa-eye-slash" title="Inactive" ></i>'
+            return '<i class="fa fa-eye-slash text-danger" title="Inactive" ></i>'
           }
         },
       },
-      /*createdAt: {
-        title: 'Create Date',
-        type: 'datetime',
+      created_at: {
+        title: 'Created',
+        type: 'date',
+        filter: false,
         valuePrepareFunction: (value) => {
-          return new DatePipe('en-US').transform(new Date(value), 'dd MMM yyyy HH:mm:ss');
+          if (value) {
+            return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+          } else {
+            return '';
+          }
+          
         }
-      }*/
+      },
+      deleted_at: {
+        title: 'Deleted',
+        type: 'date',
+        filter: false,
+        valuePrepareFunction: (value) => {
+          if (value) {
+            return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+          } else {
+            return '';
+          }
+          
+        }
+      }
     },
   };
 
-  source: LocalDataSource = new LocalDataSource();
+  source: ItemDataSource;
 
   constructor(private service: ItemService,
+    private unitService: UnitService,
+    private http: HttpClient,
     private fb :FormBuilder) {
-  }
-
-  getData() {
-    return this.service.getItems()
-            .subscribe(
-              items => {
-                this.source.load(items);
-              }
-            );
+      this.source = new ItemDataSource(http);
+      this.source.setPaging(1,this.settings.pager.perPage,true);
   }
 
   onCustom(event): void {
@@ -105,6 +129,8 @@ export class ItemsTableComponent implements OnInit {
         id: [this.item.id],
         item_code: [this.item.name, [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
         name: new FormControl(this.item.name, [Validators.required, Validators.minLength(4), Validators.maxLength(100)]),
+        description: new FormControl(this.item.description, [Validators.required, Validators.maxLength(200)]),
+        unit_name: new FormControl(this.item.unit_name, [Validators.required]),
         active: new FormControl(this.item.active, [Validators.required]),
       });
       
@@ -114,7 +140,7 @@ export class ItemsTableComponent implements OnInit {
         this.service.deleteItem(this.item)
         .subscribe(
           data => {
-            this.getData();
+            this.source.remove(this.item);
           }, 
           error => {
             this.message = error.message;
@@ -132,6 +158,8 @@ export class ItemsTableComponent implements OnInit {
       id:[''],
       item_code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
       name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]],
+      description: ['', [Validators.required, Validators.maxLength(200)]],
+      unit_name: ['', Validators.required],
       active: ['', Validators.required],
     });
   }
@@ -144,7 +172,7 @@ export class ItemsTableComponent implements OnInit {
           data => {
             this.editorEnabled = false;
             this.item = new Item();
-            this.getData();
+            this.source.refresh();
           }, 
           error => {
             if (error.status == 409){
@@ -163,7 +191,7 @@ export class ItemsTableComponent implements OnInit {
           data => {
             this.editorEnabled = false;
             this.item = new Item();
-            this.getData();
+            this.source.refresh();
           }, 
           error => { 
             this.editorEnabled = true;
@@ -186,6 +214,15 @@ export class ItemsTableComponent implements OnInit {
   }
 
   onClickRefresh(): void {
-    this.getData();
+    this.source.refresh();
+  }
+
+  getUnitList(): void {
+    this.unitService.getActiveUnits()
+    .subscribe(
+      units => {
+        this.units = units;
+      }
+    );
   }
 }

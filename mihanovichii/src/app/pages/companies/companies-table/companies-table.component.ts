@@ -60,7 +60,7 @@ export class CompaniesTableComponent implements OnInit {
           if (data == 'A') {
             return '<i class="fa fa-eye" title="Active"></i>'
           } else {
-            return '<i class="fa fa-eye-slash" title="Inactive"></i>'
+            return '<i class="fa fa-eye-slash text-danger" title="Inactive"></i>'
           }
         },
       },

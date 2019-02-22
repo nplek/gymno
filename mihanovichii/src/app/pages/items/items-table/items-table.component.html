@@ -3,7 +3,7 @@
     <nb-card [hidden]="editorEnabled">
       <nb-card-header>
         items Table 
-        <button *nbIsGranted="['create', 'item']" type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
         <button type="button" class="btn btn-primary with-margins" (click)="onClickRefresh()" title="Refresh"><i class="fa fa-sync"></i></button>
       </nb-card-header>
     
@@ -22,7 +22,7 @@
       <nb-card-header>{{ title }} item</nb-card-header>
       <nb-card-body>
         <div class="form-group">
-          <label>Name</label>
+          <label>Code</label>
           <input type="hidden" class="form-control" formControlName="id"/>
           <input type="text" placeholder="Item code" class="form-control" name="item_code" formControlName="item_code"/>
           <div *ngIf="itemForm.controls.item_code.errors && itemForm.controls.item_code.dirty" >
@@ -32,12 +32,30 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Short Name</label>
+          <label>Name</label>
           <input type="text" placeholder="Name" class="form-control" name="name" formControlName="name"/>
           <div *ngIf="itemForm.controls.name.errors && itemForm.controls.name.dirty">
             <p *ngIf="itemForm.controls.name.errors.required">Field is required</p>
             <p *ngIf="itemForm.controls.name.errors.minlength">Mininum {{itemForm.controls.name.errors.minlength.requiredLength }} characters </p>
             <p *ngIf="itemForm.controls.name.errors.maxlength">Maximum {{ itemForm.controls.name.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <input type="text" placeholder="Name" class="form-control" name="description" formControlName="description"/>
+          <div *ngIf="itemForm.controls.description.errors && itemForm.controls.description.dirty">
+            <p *ngIf="itemForm.controls.description.errors.required">Field is required</p>
+            <p *ngIf="itemForm.controls.description.errors.minlength">Mininum {{itemForm.controls.description.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="itemForm.controls.description.errors.maxlength">Maximum {{ itemForm.controls.description.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Unit</label>
+          <select class="form-control" formControlName="unit_name" [(ngModel)]="unit_name">
+            <option class="form-control"  [ngValue]="u.name" *ngFor="let u of units" [selected]="unit_name == u.name" >{{ u.name }} -- {{ u.tname }}</option>
+          </select>
+          <div *ngIf="itemForm.controls.unit_name.errors && itemForm.controls.unit_name.dirty">
+            <p *ngIf="itemForm.controls.unit_name.errors.required">Field is required</p>
           </div>
         </div>
         <div class="form-group">

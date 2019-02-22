@@ -22,6 +22,7 @@ class Position extends JsonResource
             'active' => $this->active,
             'deleted_at' => $this->deleted_at,
             'parent' => $this->parent,
+            'created_date' => $this->created_at,
         ];
     }
 }

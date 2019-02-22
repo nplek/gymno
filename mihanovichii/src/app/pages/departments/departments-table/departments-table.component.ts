@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { LocalDataSource } from 'ng2-smart-table';
-import { DepartmentService } from '../../../@core/service/department.service';
+import { DepartmentService, DepartmentDataSource } from '../../../@core/service/department.service';
 import { Department } from '../../../@core/data/department';
 import { FormBuilder,FormControl,Validators } from '@angular/forms';
 import { CompanyService } from '../../../@core/service/companies.service';
 import { Company } from '../../../@core/data/company';
 import { DatePipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { NbAccessChecker } from '@nebular/security';
 
 @Component({
   selector: 'ngx-departments-table',
@@ -17,10 +18,11 @@ export class DepartmentsTableComponent implements OnInit {
   message: any;
 
   departmentForm = this.fb.group({
-    depId:[''],
+    id:[''],
     name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]],
     short_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
     company: ['', Validators.required],
+    company_id: [''],
     active: ['', Validators.required],
   });
 
@@ -34,10 +36,13 @@ export class DepartmentsTableComponent implements OnInit {
 
   ngOnInit() {
     this.getCompanyList();
-    this.getData();
   }
   settings = {
     mode: 'external',
+    pager: {
+      display: true,
+      perPage: 10,
+    },
     actions: {
       add: false,
       edit: false,
@@ -74,35 +79,48 @@ export class DepartmentsTableComponent implements OnInit {
           if (data == 'A') {
             return '<i class="fa fa-eye" title="Active"></i>'
           } else {
-            return '<i class="fa fa-eye-slash" title="Inactive"></i>'
+            return '<i class="fa fa-eye-slash text-danger" title="Inactive"></i>'
           }
         },
       },
       created_at: {
-        title: 'Create date',
-        type: 'string',
+        title: 'Created',
+        type: 'date',
         filter: false,
-        /*valuePrepareFunction: (value) => {
-          return new DatePipe('en-US').transform(new Date(value), 'dd/MM/yyyy HH:mm:ss');
-        }*/
+        valuePrepareFunction: (value) => {
+          if (value) {
+            return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+          } else {
+            return '';
+          }
+          
+        }
       },
+      deleted_at: {
+        title: 'Deleted',
+        type: 'date',
+        filter: false,
+        valuePrepareFunction: (value) => {
+          if (value) {
+            return new DatePipe('en-US').transform(new Date(value.date), 'dd/MM/yyyy HH:mm:ss');
+          } else {
+            return '';
+          }
+          
+        }
+      }
     },
   };
 
-  source: LocalDataSource = new LocalDataSource();
+  source: DepartmentDataSource;
 
   constructor(private service: DepartmentService,
     private comService: CompanyService,
+    private http: HttpClient,
+    public accessChecker: NbAccessChecker,
     private fb: FormBuilder) {
-  }
-
-  getData() {
-    return this.service.getDepartments()
-            .subscribe(
-              departments => {
-                this.source.load(departments);
-              }
-            );
+      this.source = new DepartmentDataSource(http);
+      this.source.setPaging(1,this.settings.pager.perPage,true);
   }
 
   getCompanyList() {
@@ -131,10 +149,11 @@ export class DepartmentsTableComponent implements OnInit {
       this.companySelected = this.department.company;
       //this.companySelected = this.department.company.comId;
       this.departmentForm = this.fb.group({
-        depId: [this.department.depId],
+        id: [this.department.id],
         name: new FormControl(this.department.name, [Validators.required, Validators.minLength(4), Validators.maxLength(100)]),
         short_name: new FormControl(this.department.short_name, [Validators.required, Validators.minLength(2), Validators.maxLength(10)]),
         company: new FormControl(this.department.company, [Validators.required]),
+        company_id: [this.department.company_id],
         active: new FormControl(this.department.active, [Validators.required]),
         created_at: [this.department.created_at]
       });
@@ -147,7 +166,7 @@ export class DepartmentsTableComponent implements OnInit {
         this.service.delete(this.department)
         .subscribe(
           data => {
-            this.getData();
+            this.source.remove(this.department);
           }, 
           error => console.log(error));
       }
@@ -162,10 +181,11 @@ export class DepartmentsTableComponent implements OnInit {
     this.department = new Department();
     this.companySelected = new Company();
     this.departmentForm = this.fb.group({
-      depId: [''],
+      id: [''],
       name: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]),
       short_name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]),
       company: new FormControl('',Validators.required),
+      company_id: new FormControl(''),
       active: new FormControl('', Validators.required),
     });
   }
@@ -173,14 +193,14 @@ export class DepartmentsTableComponent implements OnInit {
   save() {
     if (this.status == "create" ) {
       this.department = <Department>this.departmentForm.value;
+      this.department.company_id = this.department.company.id;
       this.service.add(this.department)
         .subscribe(
           data => {
-            //this.source.add(data);
             this.editorEnabled = false;
             this.department = new Department();
             this.companySelected = new Company();
-            this.getData();
+            this.source.refresh();
           }, 
           error => {
             console.log(error);
@@ -195,13 +215,14 @@ export class DepartmentsTableComponent implements OnInit {
       //-->update to tables
     } else if (this.status == "update") {
       this.department = <Department>this.departmentForm.value;
+      this.department.company_id = this.department.company.id;
       this.service.update(this.department)
         .subscribe(
           data => {
             this.editorEnabled = false;
             this.companySelected = new Company();
             this.department = new Department();
-            this.getData();
+            this.source.refresh();
           }, 
           error => { 
             this.editorEnabled = true;
@@ -223,6 +244,6 @@ export class DepartmentsTableComponent implements OnInit {
   }
 
   onClickRefresh(): void {
-    this.getData();
+    this.source.refresh();
   }
 }

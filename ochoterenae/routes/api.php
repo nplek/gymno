@@ -23,6 +23,8 @@ Route::group(['middleware' => 'auth:api'], function(){
             //Route::post('auth/sign-out','LoginController@signout')->name('auth.signout');
             //Route::post('auth/reset-pass','LoginController@resetpass')->name('auth.resetpass');
             //Route::get('auth/logout','LoginController@logout')->name('auth.logout');
+            //Route::get('auth/getroles','LoginController@getrole')->name('auth.getrole');
+            Route::get('auth/getroles','UserController@getrole')->name('auth.getrole');
 
             Route::post('companies/{id}/restore','CompanyController@restore')->name('companies.restore');
             Route::get('companies/list','CompanyController@list')->name('companies.list');
@@ -49,8 +51,8 @@ Route::group(['middleware' => 'auth:api'], function(){
             Route::post('users/passport/{uid}','UserController@reset_passport')->name('users.passport.reset');
             Route::resource('users', 'UserController',['except' => ['create','edit']]);
 
-            Route::post('employees/manager/list','EmployeeController@listManager')->name('employees.manager.list');
-            Route::post('employees/staff/list','EmployeeController@listStaff')->name('employees.staff.list');
+            Route::get('employees/manager/list','EmployeeController@listManager')->name('employees.manager.list');
+            Route::get('employees/staff/list','EmployeeController@listStaff')->name('employees.staff.list');
             Route::get('employees/list','EmployeeController@list')->name('employees.list');
             Route::get('employees/active','EmployeeController@list')->name('employees.active');
             Route::resource('employees', 'EmployeeController',['except' => ['create','edit']]);
@@ -64,6 +66,8 @@ Route::group(['middleware' => 'auth:api'], function(){
             Route::post('teams/list','TeamController@list')->name('teams.list');
             Route::resource('teams', 'TeamController',['except' => ['create','edit']]);
 
+            Route::get('units/list','UnitController@list')->name('units.list');
+            Route::get('units/active','UnitController@list')->name('units.active');
             Route::resource('units', 'UnitController',['except' => ['create','edit']]);
             
             Route::get('logs/activitylogs', 'LogController@activityLogsIndex')->name('logs.activity.index');

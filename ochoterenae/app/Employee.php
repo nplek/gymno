@@ -14,11 +14,11 @@ class Employee extends Model
     use LogsActivity;
     protected static $logName = 'system';
     protected static $logOnlyDirty = true;
-    protected static $logAttributes = ['first_name', 'last_name','phone','mobile','manager_id','active'];
+    protected static $logAttributes = ['first_name', 'last_name','phone','mobile', 'email','manager_id','active'];
 
     public function scopeManager($query)
     {
-        return $query->where('type', 'M');
+        return $query->whereIn('type',['M','C','D']);
     }
 
     public function scopeStaff($query)
