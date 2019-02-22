@@ -25,12 +25,14 @@ class User extends JsonResource
             'employee' => new EmployeeResource($this->employee),
             'active' => $this->active,
             //'userroles' => RoleUserResource::collection($this->roleusers),
+            'user_type' => $this->user_type,
             'roles' => RoleResource::collection($this->roles),
             'last_login_ip' => $this->last_login_ip,
             'last_login_at' => $this->last_login_at,
             'last_logout_at' => $this->last_logout_at,
             'deleted_at' => $this->deleted_at,
             'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

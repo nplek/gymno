@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'ngx-permissions',
-  templateUrl: './permissions.component.html',
-  styleUrls: ['./permissions.component.scss']
+  template: `<router-outlet></router-outlet>`,
 })
 export class PermissionsComponent implements OnInit {
 

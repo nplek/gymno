@@ -9,9 +9,6 @@ export class AuthGuard implements CanActivate {
     constructor(private authService: NbAuthService, private router: Router) {
     }
     canActivate() {
-        //return this.authService.isAuthenticated();
-        //console.log(this.authService.isAuthenticated());
-        //this.authService.logout('email');
         return this.authService.isAuthenticated()
         .pipe(
             tap(authenticated => {

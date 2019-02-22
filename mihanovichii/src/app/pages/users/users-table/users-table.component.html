@@ -1,0 +1,101 @@
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card [hidden]="editorEnabled">
+      <nb-card-header>
+        Role Table 
+        <button type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-primary with-margins" (click)="onClickRefresh()" title="Refresh"><i class="fa fa-sync"></i></button>
+      </nb-card-header>
+    
+      <nb-card-body>
+        <ng2-smart-table [settings]="settings" [source]="source" (custom)="onCustom($event)">
+        </ng2-smart-table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6">
+    <form (ngSubmit)="onSubmit()" [formGroup]="userForm">
+    <nb-card [hidden]="!editorEnabled">
+      <nb-card-header>{{ title }} Employee</nb-card-header>
+      <nb-card-body>
+        <div class="form-group">
+          <input type="hidden" class="form-control" formControlName="id"/>
+          <label>First Name</label>
+          <input type="text" placeholder="First Name" class="form-control" name="name" formControlName="name"/>
+          <div *ngIf="userForm.controls.name.errors && userForm.controls.name.dirty" >
+            <p *ngIf="userForm.controls.name.errors.required">Field is required</p>
+            <p *ngIf="userForm.controls.name.errors.minlength">Minimum {{ userForm.controls.name.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="userForm.controls.name.errors.maxlength">Maximum {{ userForm.controls.name.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" placeholder="Email" class="form-control" name="email" formControlName="email"/>
+          <div *ngIf="userForm.controls.email.errors && userForm.controls.email.dirty">
+            <p *ngIf="userForm.controls.email.errors.required">Field is required</p>
+            <p *ngIf="userForm.controls.email.errors.email">Email is required </p>
+          </div>
+        </div>
+        <div class="form-group">
+            <label>Department</label>
+        </div>
+        <div class="form-group">
+          <label>type</label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="email" value="email" name="user_type" formControlName="user_type">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Email</span>
+          </label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="ldap" value="ldap" name="user_type" formControlName="user_type" >
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">LDAP</span>
+          </label>
+          <div *ngIf="userForm.controls.user_type.errors && userForm.controls.user_type.dirty">
+            <p *ngIf="userForm.controls.user_type.errors.required">Field is required</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Employee</label>
+          <br/>
+          <ss-multiselect-dropdown [settings]="mySettings" [options]="employeeList" [texts]="myTexts" formControlName="employee" [(ngModel)]="employee">
+          </ss-multiselect-dropdown>
+        </div>
+        <div class="form-group">
+          <label>Roles</label>
+          <br/>
+          <ss-multiselect-dropdown [settings]="mySettings" [options]="roleList" [texts]="myTexts" formControlName="roles" [(ngModel)]="roles">
+          </ss-multiselect-dropdown>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="active" value="A" name="active" formControlName="active">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Active</span>
+          </label>
+          <label class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="inactive" value="I" name="active" formControlName="active" >
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Inactive</span>
+          </label>
+          <div *ngIf="userForm.controls.active.errors && userForm.controls.active.dirty">
+            <p *ngIf="userForm.controls.active.errors.required">Field is required</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <p *ngIf="message" style="color: red;">{{ message }}</p>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button type="submit" class="btn btn-success with-margins" [disabled]="!userForm.valid" >{{title}}</button>
+        <button type="button" class="btn btn-outline-info with-margins" (click)="onClickBack()">Back</button>
+      </nb-card-footer>
+    </nb-card>
+    </form>
+  </div>
+
+</div>

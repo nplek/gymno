@@ -53,15 +53,15 @@ export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
     children: [
       {
         title: 'Users',
-        link: '/pages/users/users-list',
+        link: '/pages/users/users-table',
       },
       {
         title: 'Roles',
-        link: '/pages/roles/roles-list',
+        link: '/pages/roles/roles-table',
       },
       {
         title: 'Permissions',
-        link: '/pages/permissions/permissions-list',
+        link: '/pages/permissions/permissions-table',
       },
     ],
   },

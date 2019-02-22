@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'ngx-roles',
+  selector: 'ngx-users',
   template: `<router-outlet></router-outlet>`,
 })
-export class RolesComponent implements OnInit {
+export class UsersComponent implements OnInit {
 
   constructor() { }
 

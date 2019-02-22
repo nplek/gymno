@@ -31,7 +31,7 @@ class RoleController extends Controller
 
         $pageSize = min($request['page_size'],50);
         //return new RoleCollection(Role::paginate(50));
-        return new RoleCollection(Role::where($query)->withTrashed()->paginate($pageSize));
+        return new RoleCollection(Role::where($query)->paginate($pageSize));
     }
 
     public function list()
@@ -41,7 +41,9 @@ class RoleController extends Controller
 
     public function store(Request $request) {
         $this->validate($request, [
-            'name'=>'required|max:50|unique:roles',
+            'name'=>'required|max:100|unique:roles',
+            'display_name'=>'required|max:100',
+            'description'=>'max:100',
             'permissions' =>'required',
             ]
         );
@@ -63,7 +65,9 @@ class RoleController extends Controller
 
     public function update(Request $request, $id) {
         $this->validate($request, [
-            'name'=>'required|max:50,'.$id,
+            'name'=>'required|max:100,'.$id,
+            'display_name'=>'required|max:100',
+            'description'=>'max:100',
             'permissions' =>'required',
             ]
         );

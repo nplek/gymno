@@ -29,7 +29,7 @@ class PermissionController extends Controller
 
         $pageSize = min($request['page_size'],50);
         //return new PermissionCollection(Permission::paginate(50));
-        return new PermissionCollection(Permission::where($query)->withTrashed()->paginate($pageSize));
+        return new PermissionCollection(Permission::where($query)->paginate($pageSize));
     }
 
     public function list()
@@ -39,8 +39,8 @@ class PermissionController extends Controller
 
     public function store(Request $request) {
         $this->validate($request, [
-            'name'=>'required|max:50|unique:Permissions',
-            'display_name' => 'max:100',
+            'name'=>'required|max:100|unique:permissions',
+            'display_name' => 'required|max:100',
             'description' => 'max:100',
             ]
         );
@@ -60,8 +60,8 @@ class PermissionController extends Controller
 
     public function update(Request $request, $id) {
         $this->validate($request, [
-            'name'=>'required|max:50,'.$id,
-            'display_name' => 'max:100',
+            'name'=>'required|max:100,'.$id,
+            'display_name' => 'required|max:100',
             'description' => 'max:100',
         ]);
         $permission = Permission::findOrFail($id);

@@ -22,12 +22,30 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $query = [];
+        if ($request['active_like']){
+            $search = $request['active_like'];
+            array_push($query,['active','=',$search]);
+        }
+
+        if ($request['short_name_like']) {
+            $search = $request['short_name_like'];
+            array_push($query,['short_name', 'like', '%'.$search.'%']);
+        }
+
+        if ($request['name_like']) {
+            $search = $request['name_like'];
+            array_push($query,['name', 'like', '%'.$search.'%']);
+        }
+
+        $pageSize = min($request['page_size'],50);
         //if (Auth::user()->can('restore-user') ){
             //return new UserCollection(User::withTrashed()->paginate(50));
         //} else {
-            return new UserCollection(User::paginate(50));
+            //return new UserCollection(User::paginate(50));
+            return new UserCollection(User::where($query)->paginate($pageSize));
         //}
     }
 
@@ -83,7 +101,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name'=>'required|alpha_dash|max:120',
+            'name'=>'required|alpha_dash|max:100',
             'email'=>'required|email|unique:users',
             'password'=>'min:6|confirmed',
             'employee_id' => 'required',
@@ -112,7 +130,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name'=>'required|alpha_dash|max:120',
+            'name'=>'required|alpha_dash|max:100',
             'email'=>'required|email',
         ]);
 

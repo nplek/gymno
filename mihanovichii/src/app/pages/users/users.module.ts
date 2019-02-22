@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { ThemeModule } from '../../@theme/theme.module';
-import { RolesRoutingModule, routedComponents } from './roles-routing.module';
+import { UsersRoutingModule, routedComponents } from './users-routing.module';
 
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
@@ -13,10 +13,10 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
   ],
   imports: [
     CommonModule,
-    ThemeModule,
-    RolesRoutingModule,
     Ng2SmartTableModule,
+    ThemeModule,
+    UsersRoutingModule,
     MultiselectDropdownModule,
   ]
 })
-export class RolesModule { }
+export class UsersModule { }

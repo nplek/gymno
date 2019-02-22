@@ -1,3 +1,65 @@
-<p>
-  permissions-table works!
-</p>
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card [hidden]="editorEnabled">
+      <nb-card-header>
+        Permission Table 
+        <button type="button" class="btn btn-outline-success with-margins" (click)="onClickCreate()" title="New"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-primary with-margins" (click)="onClickRefresh()" title="Refresh"><i class="fa fa-sync"></i></button>
+      </nb-card-header>
+    
+      <nb-card-body>
+        <ng2-smart-table [settings]="settings" [source]="source" (custom)="onCustom($event)">
+        </ng2-smart-table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6">
+    <form (ngSubmit)="onSubmit()" [formGroup]="permissionForm">
+    <nb-card [hidden]="!editorEnabled">
+      <nb-card-header>{{ title }} Unit</nb-card-header>
+      <nb-card-body>
+        <div class="form-group">
+          <label>Code</label>
+          <input type="hidden" class="form-control" formControlName="id"/>
+          <input type="text" placeholder="Name" class="form-control" name="name" formControlName="name"/>
+          <div *ngIf="permissionForm.controls.name.errors && permissionForm.controls.name.dirty" >
+            <p *ngIf="permissionForm.controls.name.errors.required">Field is required</p>
+            <p *ngIf="permissionForm.controls.name.errors.minlength">Minimum {{ permissionForm.controls.name.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="permissionForm.controls.name.errors.maxlength">Maximum {{ permissionForm.controls.name.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Display name</label>
+          <input type="text" placeholder="Display Name" class="form-control" name="display_name" formControlName="display_name"/>
+          <div *ngIf="permissionForm.controls.display_name.errors && permissionForm.controls.display_name.dirty" >
+            <p *ngIf="permissionForm.controls.display_name.errors.required">Field is required</p>
+            <p *ngIf="permissionForm.controls.display_name.errors.minlength">Minimum {{ permissionForm.controls.display_name.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="permissionForm.controls.display_name.errors.maxlength">Maximum {{ permissionForm.controls.display_name.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <input type="text" placeholder="Description" class="form-control" name="description" formControlName="description"/>
+          <div *ngIf="permissionForm.controls.description.errors && permissionForm.controls.description.dirty" >
+            <p *ngIf="permissionForm.controls.description.errors.required">Field is required</p>
+            <p *ngIf="permissionForm.controls.description.errors.minlength">Minimum {{ permissionForm.controls.description.errors.minlength.requiredLength }} characters </p>
+            <p *ngIf="permissionForm.controls.description.errors.maxlength">Maximum {{ permissionForm.controls.description.errors.maxlength.requiredLength }} characters </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <p *ngIf="message" style="color: red;">{{ message }}</p>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button type="submit" class="btn btn-success with-margins" [disabled]="!permissionForm.valid" >{{title}}</button>
+        <button type="button" class="btn btn-outline-info with-margins" (click)="onClickBack()">Back</button>
+        <button type="button" class="btn btn-outline-warning with-margins"  *ngIf="isDeleted" (click)="onClickRestore()">Restore</button>
+      </nb-card-footer>
+    </nb-card>
+    </form>
+  </div>
+</div>
+  

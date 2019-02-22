@@ -19,6 +19,8 @@ class Permission extends JsonResource
             'name' => $this->name,
             'display_name' => $this->display_name,
             'description'  => $this->description,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }
