@@ -53,7 +53,6 @@ class PositionController extends Controller
         $position = Position::create([
             'name' => $request['name'],
             'short_name' => $request['short_name'],
-            'parent_id' => $request['parent_id'],
             'active' => $request['active'],
         ]);
 
@@ -74,7 +73,6 @@ class PositionController extends Controller
         $position = Position::findOrFail($id);
         $position->name = $request['name'];
         $position->short_name = $request['short_name'];
-        //$position->parent_id = $request['parent_id'];
         $position->active = $request['active'];
         $position->save();
 

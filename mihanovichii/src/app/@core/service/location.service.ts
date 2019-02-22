@@ -59,6 +59,13 @@ export class LocationService {
         const url = `${this.locationUrl}/${location.id}`;
         return this.http.put(url, location, httpOptions);
     }
+
+    restoreLocation(location: Location | number): Observable<Location> {
+        const id = typeof location === 'number' ? location : location.id;
+        const url = `${this.locationUrl}/${id}/restore`;
+
+        return this.http.post<Location>(url,id,httpOptions);
+    }
 }
 
 @Injectable()

@@ -283,7 +283,6 @@ export class EmployeesTableComponent implements OnInit {
       this.employee = <Employee>this.employeeForm.value;
       this.employee.department_id = this.employee.department.id;
       this.employee.manager_id = this.employee.manager.id;
-      console.log(this.employee);
       this.service.addEmployee(this.employee)
         .subscribe(
           data => {
@@ -311,7 +310,6 @@ export class EmployeesTableComponent implements OnInit {
       this.employee = <Employee>this.employeeForm.value;
       this.employee.department_id = this.employee.department.id;
       this.employee.manager_id = this.employee.manager.id;
-      console.log(this.employee);
       this.service.updateEmployee(this.employee)
         .subscribe(
           data => {

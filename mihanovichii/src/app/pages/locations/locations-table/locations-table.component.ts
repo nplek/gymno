@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-//import { LocalDataSource } from 'ng2-smart-table';
 
 import { Location } from '../../../@core/data/location';
 import { LocationService, LocationDataSource } from '../../../@core/service/location.service';
@@ -44,8 +43,11 @@ export class LocationsTableComponent implements OnInit {
         title: '<i class="nb-edit"></i>',
       },{
         name: 'delete',
-        title: '<i class="nb-trash"></i>',
-      }]
+        title: '<i [disabled]="!deleted_at" class="nb-trash"></i>',
+      },{
+        name: 'restore',
+        title: '<i class="nb-arrow-retweet"></i>'
+      }],
     },
     columns: {
       name: {
@@ -130,6 +132,18 @@ export class LocationsTableComponent implements OnInit {
             this.message = error.message;
           });
       }
+    } else if (event.action == 'restore') {
+      if (window.confirm('Are you sure you want to restore?')) {
+        this.location = event.data;
+        this.service.restoreLocation(this.location)
+        .subscribe(
+          data => {
+            this.source.refresh();
+          }, 
+          error => {
+            this.message = error.message;
+          });
+      }
     }
   }
 
@@ -139,7 +153,7 @@ export class LocationsTableComponent implements OnInit {
     this.status = "create";
     this.location = new Location();
     this.locationForm = this.fb.group({
-      locationId:[''],
+      id:[''],
       name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(120)]],
       short_name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
       active: ['', Validators.required],
